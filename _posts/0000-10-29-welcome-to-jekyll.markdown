@@ -44,8 +44,21 @@ $ i={\sqrt[{n}]{\left({\frac {FV}{PV}}\right)}}-1 $
 
 显示：
 $ i={\sqrt[{n}]{\left({\frac {FV}{PV}}\right)}}-1 $
+看来并不支持。
 
-$f = ma$
+如何让它显示单行公式呢：
+试试这个
+```
+\\
+$$
+i={\sqrt[{n}]{\left({\frac {FV}{PV}}\right)}}-1
+$$
+```
+
+\\
+$$
+i={\sqrt[{n}]{\left({\frac {FV}{PV}}\right)}}-1
+$$
 
 # 标题1
 
