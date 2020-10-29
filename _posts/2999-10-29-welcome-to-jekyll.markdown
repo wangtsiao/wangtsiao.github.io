@@ -15,7 +15,7 @@ print_hi('Tom')
 #=> prints 'Hi, Tom' to STDOUT.
 {% endhighlight %}
 
-{% hightlight python %}
+{% highlight python %}
 def print_hello(name):
   print(f"Hello {name}")
 
