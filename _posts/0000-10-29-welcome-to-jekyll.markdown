@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Jeykll使用方法"
-date:   2999-10-29 20:16:31 +0800
+date:   0000-10-29 20:16:31 +0800
 categories: jekyll update
 ---
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
