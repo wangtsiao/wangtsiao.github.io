@@ -26,10 +26,24 @@ print_hello("python")
 
 Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].
 
-查看是否支持数学公式：
+是否支持数学公式：
+```
 $$
 i={\sqrt[{n}]{\left({\frac {FV}{PV}}\right)}}-1
 $$
+```
+显示：
+$$
+i={\sqrt[{n}]{\left({\frac {FV}{PV}}\right)}}-1
+$$
+
+那么
+```
+$ i={\sqrt[{n}]{\left({\frac {FV}{PV}}\right)}}-1 $
+```
+
+显示：
+$ i={\sqrt[{n}]{\left({\frac {FV}{PV}}\right)}}-1 $
 
 $f = ma$
 
