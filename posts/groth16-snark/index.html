@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html><head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Groth16 Zero Knowledege Proof Made Not Simple - Tsiao Wang&#39;s website</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="1. Preliminaries 1.1 Bilinear Groups The proof system works with bilinear groups $(p, \mathbb{G}_1, \mathbb{G}_2, \mathbb{G}_T, e)$ with the following properties:
+$\mathbb{G}_1, \mathbb{G}_2, \mathbb{G}_T$ are groups of prime order p $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$ is a bilinear map i.e., $e(U^a, V^b)=e(U, V)^{ab}$ If $G$ is a generator for $\mathbb{G}_1$ and $H$ is a generator for $\mathbb{G}_2$ then $e(G, H)$ is a generator for $\mathbb{G}_T$. There are efficient algorithms for computing group operations, evaluating the bilinear map, deciding membership of the groups, deciding equality of group elements and sampling generators of the groups." />
+	<meta property="og:image" content=""/>
+	<meta property="og:title" content="Groth16 Zero Knowledege Proof Made Not Simple" />
+<meta property="og:description" content="1. Preliminaries 1.1 Bilinear Groups The proof system works with bilinear groups $(p, \mathbb{G}_1, \mathbb{G}_2, \mathbb{G}_T, e)$ with the following properties:
+$\mathbb{G}_1, \mathbb{G}_2, \mathbb{G}_T$ are groups of prime order p $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$ is a bilinear map i.e., $e(U^a, V^b)=e(U, V)^{ab}$ If $G$ is a generator for $\mathbb{G}_1$ and $H$ is a generator for $\mathbb{G}_2$ then $e(G, H)$ is a generator for $\mathbb{G}_T$. There are efficient algorithms for computing group operations, evaluating the bilinear map, deciding membership of the groups, deciding equality of group elements and sampling generators of the groups." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://wangtsiao.github.io/posts/groth16-snark/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-04-21T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-04-21T00:00:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Groth16 Zero Knowledege Proof Made Not Simple"/>
+<meta name="twitter:description" content="1. Preliminaries 1.1 Bilinear Groups The proof system works with bilinear groups $(p, \mathbb{G}_1, \mathbb{G}_2, \mathbb{G}_T, e)$ with the following properties:
+$\mathbb{G}_1, \mathbb{G}_2, \mathbb{G}_T$ are groups of prime order p $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$ is a bilinear map i.e., $e(U^a, V^b)=e(U, V)^{ab}$ If $G$ is a generator for $\mathbb{G}_1$ and $H$ is a generator for $\mathbb{G}_2$ then $e(G, H)$ is a generator for $\mathbb{G}_T$. There are efficient algorithms for computing group operations, evaluating the bilinear map, deciding membership of the groups, deciding equality of group elements and sampling generators of the groups."/>
+<script src="https://wangtsiao.github.io/js/feather.min.js"></script>
+	
+	
+        <link href="https://wangtsiao.github.io/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css" rel="stylesheet">
+	
+
+	
+	<link rel="stylesheet" type="text/css" media="screen" href="https://wangtsiao.github.io/css/main.5e710c0dc0fca6c435c4ed4ee77fb02dee7ec45c5201ae59282a7d0d4cd48819.css" />
+		<link id="darkModeStyle" rel="stylesheet" type="text/css" href="https://wangtsiao.github.io/css/dark.2dad086d5a7ee67f54c57d9d2b14eab5615e1110bb22e1dcda35439b4a89a5b9.css"  disabled />
+	
+
+	
+	
+		<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+	
+		
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Config({
+			tex2jax: {
+				inlineMath: [['$','$'], ['\\(','\\)']],
+				displayMath: [['$$','$$'], ['\[','\]']],
+				processEscapes: true,
+				processEnvironments: true,
+				skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+				TeX: { equationNumbers: { autoNumber: "AMS" },
+						 extensions: ["AMSmath.js", "AMSsymbols.js"] }
+			}
+		});
+		</script>
+	
+
+	
+	
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css">
+		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js"></script>
+		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+		
+		
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+					renderMathInElement(document.body, {
+							delimiters: [
+									{left: "$$", right: "$$", display: true},
+									{left: "$", right: "$", display: false}
+							]
+					});
+			});
+			</script>
+	
+	
+	
+</head>
+<body>
+        <div class="content"><header>
+	<div class="main">
+		<a href="https://wangtsiao.github.io/">Tsiao Wang&#39;s website</a>
+	</div>
+	<nav>
+		
+		<a href="/posts">All posts</a>
+		
+		<a href="/tags">Tags</a>
+		
+		<a href="/about">About</a>
+		
+		| <span id="dark-mode-toggle" onclick="toggleTheme()"></span>
+		<script src="https://wangtsiao.github.io/js/themetoggle.js"></script>
+		
+	</nav>
+</header>
+
+<main>
+	<article>
+		<div class="title">
+			<h1 class="title">Groth16 Zero Knowledege Proof Made Not Simple</h1>
+			<div class="meta">Posted on Apr 21, 2023</div>
+		</div>
+		
+
+		<section class="body">
+			<h2 id="1-preliminaries">1. Preliminaries</h2>
+<h3 id="11-bilinear-groups">1.1 Bilinear Groups</h3>
+<p>The proof system works with bilinear groups $(p, \mathbb{G}_1, \mathbb{G}_2, \mathbb{G}_T, e)$ with the following properties:</p>
+<ul>
+<li>$\mathbb{G}_1, \mathbb{G}_2, \mathbb{G}_T$ are groups of prime order p</li>
+<li>$e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$ is a bilinear map
+<ul>
+<li>i.e., $e(U^a, V^b)=e(U, V)^{ab}$</li>
+</ul>
+</li>
+<li>If $G$ is a generator for $\mathbb{G}_1$ and $H$ is a generator for $\mathbb{G}_2$ then $e(G, H)$ is a generator for $\mathbb{G}_T$.</li>
+<li>There are efficient algorithms for computing group operations, evaluating the bilinear map, deciding membership of the groups, deciding equality of group elements and sampling generators of the groups. We refer to these as the generic bilinear group operations.</li>
+</ul>
+<p>There are many ways to set up bilinear groups both as symmetric bilinear groups where $\mathbb{G}_1 = \mathbb{G}_2$ and as asymmetric bilinear groups where $\mathbb{G}_1 \neq \mathbb{G}_2$.</p>
+<h3 id="12-quadratic-arithmetic-programs">1.2 Quadratic Arithmetic Programs</h3>
+<p>Consider an arithmetic circuit consisting of addition and multiplication gates over a finite field $\mathbb{F}$. We may designate some of the input/output wires as specifying a statement and use the rest of the wires in the circuit to define a witness. This gives us a binary relation $R$ consisting of statement wires and witness wires that satisfy the arithmetic circuit, i.e., make it consistent with the designated input/output wires.</p>
+<p>The relation consists of statements and witnesses that satisfy all the equations. The equations will be over $a_0 = 1$ and variables $a_1,&hellip;,a_m \in \mathbb{F}$ and be of the form
+$$
+\sum{a_i u_{i,q}} \cdot \sum{a_i v_{i,q}} = \sum{a_i w_{i,q}}
+$$
+where $u_{i,q},v_{i,q},w_{i,q}$ are constants in $\mathbb{F}$ specifying the $q$th equation.</p>
+<p>A multiplication gate can for instance be described as $a_i \cdot a_j = a_k$ (using $u_i = 1$, $v_j = 1$ and $w_k = 1$ and setting the remaining constants for this gate to 0). Addition gates are handled for free in the sums defining the equations, i.e., if $a_i + a_j = a_k$ and $a_k$ is multiplied by $a_l$, we may simply write $(a_i + a_j) \cdot a_l$
+and skip the calculation of $a_k$.</p>
+<p>Following GGPR13<a href="#refer-GGPR13"><sup>1</sup></a> we can reformulate the set of arithmetic constraints as a quadratic arithmetic program assuming $\mathbb{F}$ is large enough.
+Given $n$ equations we pick arbitrary distinct $r_1, &hellip; , r_n \in \mathbb{F}$ and define $t(x) =\prod_{q=1}^{n}(x−r_q)$.
+Furthermore, let $u_i(x),v_i(x),w_i(x)$ be degree $n−1$ polynomials such that
+$$
+u_i(r_q) = u_{i,q}, \ v_i(r_q) = v_{i,q}, \ w_i(r_q) = w_{i,q}  \  \  \  \ \  \ \  for \ i=0,&hellip;,m, \  q=1,&hellip;,n
+$$
+We now have that $a_0 = 1$ and the variables $a_1,&hellip;,a_m \in \mathbb{F}$ satisfy the $n$ equations if and only if in each point $r_1,&hellip;,r_q$
+$$
+\sum_{i=0}^{m}{a_i u_i(r_q)} \cdot \sum_{i=0}^{m}{a_i v_i(r_q)} = \sum_{i=0}^{m}{a_i w_i(r_q)}
+$$</p>
+<p>Since $t(X)$ is the lowest degree monomial with $t(r_q) = 0$ in each point, we can reformulate this condition as
+$$
+\sum_{i=0}^{m}{a_i u_i(X)} \cdot \sum_{i=0}^{m}{a_i v_i(X)} - \sum_{i=0}^{m}{a_i w_i(X)} = 0
+$$
+which implies that
+$$
+\sum_{i=0}^{m}{a_i u_i(X)} \cdot \sum_{i=0}^{m}{a_i v_i(X)} \equiv \sum_{i=0}^{m}{a_i w_i(X)} \ mod \ t(X)
+$$</p>
+<p>Formally, we will be working with quadratic arithmetic programs $R$ that have the following description
+$$
+R = (\mathbb{F}, aux, \ell, \{u_i(X), v_i(X), w_i(X)\}_{i=0}^m, t(X))
+$$</p>
+<p>where $\mathbb{F}$ describes a finite field, $aux$ is some auxiliary information, $1 \le \ell \le m$, $u_i(X),v_i(X),w_i(X),t(X) \in \mathbb{F}[X]$ and $u_i(X),v_i(X),w_i(X)$ have strictly lower degree than $n$, the degree of $t(X)$. A quadratic arithmetic program with such a description defines the following binary relation, where we define $a_0 = 1$,
+$$
+R = \lbrace
+(\phi, w)
+\begin{array}{|l}
+\phi=\left(a_1, \ldots, a_{\ell}\right) \in \mathbb{F}^{\ell} \\
+w=\left(a_{\ell+1}, \ldots, a_m\right) \in \mathbb{F}^{m-\ell} \\
+\sum_{i=0}^m a_i u_i(X) \cdot \sum_{i=0}^m a_i v_i(X) \equiv \sum_{i=0}^m a_i w_i(X) \bmod t(X)
+\end{array}
+\rbrace
+$$</p>
+<p>We say $R$ is a quadratic arithmetic program generator if it generates relations of the form given above with fields of size larger than $2^{\lambda−1}$ ($\lambda$ is the security parameter).</p>
+<p>The example that I choose is the same one with vitalik posted: proving that you know the solution to a cubic equation: $x^3 + x + 5 == y$ where $x$ is private and $y$ is public, (if $y=35$, then $x=3$). This problem is simple enough that the resulting QAP will not be so large as to be intimidating, but nontrivial enough that you can see all of the machinery come into play.
+<img src="/groth16-snark/circuit-example.png" width="40%" 
+style="display: block;
+margin-left: auto;
+margin-right: auto;
+width: 50%;
+"></p>
+<p>Here in this circuit we have two public variables <code>('one', 'y')</code> and three secret variables <code>('x', 'sym1', 'sym2')</code>. Three constraints
+$$
+1x * 1x = 1sym_1 \\
+1sym_1 * 1x = 1sym_2 \\
+1one * 1y = 5one + 1x + 1sym_2
+$$
+where variables $a_0,&hellip;,a_4 \in \mathbb{F}$ are $(1, y, x, sym_1, sym_2)$. For the first equation, $a_2=x, a_3=sym_1, u_{2,0}=1, v_{2,0}=1, w_{3,0}=1$, for the second equation, $a_4=sym_2, u_{3,1}=1, v_{2,1}=1, w_{4,1}=1$, for the third equation, $a_0=one, a_1=y, u_{0,2}=1, v_{1,2}=1, w_{0,2}=5, w_{2,2}=1, w_{4,2}=1$.</p>
+<p>Format the $u, v, w$ matrixes, then we have
+$$
+u = (
+(0, 0, 1, 0, 0),
+(0, 0, 0, 1, 0),
+(1, 0, 0, 0, 0)
+) \\
+v = (
+(0, 0, 1, 0, 0),
+(0, 0, 1, 0, 0),
+(0, 1, 0, 0, 0)
+) \\
+w = (
+(0, 0, 0, 1, 0),
+(0, 0, 0, 0, 1),
+(5, 0, 1, 0, 1)
+)
+$$</p>
+<p>The vector $a$ is $(one, y, x, sym_1, sym_2)$ where the public variables are placed front on the secret variables. $a=(1, 35, 3, 9, 27)$. Then we have
+$$
+au^T + av^T = aw^T
+$$
+We call the above format as R1CS which is usually used as frontend in many zero knowledge proof systems. Following GGPR13<a href="#refer-GGPR13"><sup>1</sup></a>, we reformulate the R1CS to QAP. We take the finite field as $\mathbb{F}=\mathbb{Z}_{mod \ q}$ where $q=97$ (cause 97 is a prime number), then we choose distinct $r_1, &hellip; , r_3 \in \mathbb{F}$ as $1, 2, 3$.</p>
+<p>Now, using $u_i, v_i, w_i$ indicates polynomials, we have $u_i(1)=u_{i,1}, u_i(2)=u_{i,2}, u_i(3)=u_{i,3}$. Using lagrange interpolation we get those polynomials, $u_i, v_i, w_i$ for $i \in \{0, &hellip;, 4\}$.</p>
+<p>Then we have the following equation for $t(X)=(X-1)(X-2)(X-3)$.
+$$
+\sum_{i=0}^{m}{a_i u_i(X)} \cdot \sum_{i=0}^{m}{a_i v_i(X)} \equiv \sum_{i=0}^{m}{a_i w_i(X)} \ mod \ t(X)
+$$</p>
+<h3 id="13-linear-interactive-proofs">1.3 Linear Interactive Proofs</h3>
+<p>A two-move algebraic linear interactive proof (LIP) of degree $(d_Q,d_D)$ for a relation generator $R$, where we assume the relations specify a finite field $\mathbb{F}$, is a non-interactive argument system where the algorithms work as follows:</p>
+<ul>
+<li>$(\sigma,\tau) \leftarrow Setup(R)$: It creates an arithmetic circuit of multiplicative depth $d_Q$ that takes as input randomness $r\in \mathbb{F}^\mu$ and returns vectors $\sigma\in\mathbb{F}^m$ and $\tau\in\mathbb{F}^n$. We will for notational simplicity assume that $\sigma$ always contains 1 as an entry such that there is no distinction between affine and linear functions of $\sigma$.</li>
+<li>$\pi \leftarrow Prove(R,\sigma,\phi,w)$:The prover operates in two stages. First it runs $\Pi ← ProofMatrix(R,\phi,w)$, where $ProofMatrix$ is a probabilistic polynomial time algorithm that generates a matrix $\Pi \in F^{k\times m}$. Then it computes the proof as $\pi = \Pi \sigma$.</li>
+<li>$0/1 \leftarrow Verify(R,\sigma,\phi,\pi)$: The verifier runs in two stages. First it runs a deterministic polynomial time algorithm $t \leftarrow Test(R, \phi)$ to get an arithmetic circuit $t: \mathbb{F}^{m+k} \rightarrow \mathbb{F}^\eta$ of multiplicative depth $d_D$. It then accepts the proof if and only if $t(\sigma, \pi) = 0$.</li>
+</ul>
+<p>The degrees and dimensions $d_Q, d_D, \mu, m, n, k, \eta$ may be constants or polynomials in the security parameter $\lambda$.</p>
+<p>The tuple $(Setup,Prove,Verify)$ is a linear interactive proof for $R$ if it has perfect completeness and statistical knowledge soundness against affine prover strategies as defined below.</p>
+<h2 id="2-constructions-of-non-interactive-arguments">2. Constructions of Non-interactive Arguments</h2>
+<p>Here, I will fist give a LIP and then convert the LIP into a pairing based NIZK argument.</p>
+<h3 id="21-lip-for-qap">2.1 LIP for QAP</h3>
+<p>First, constuctin a LIP for quadratic arithmetic program generators that outputs relations of the form</p>
+<p>$$
+R = (\mathbb{F}, aux, \ell, \{u_i(X), v_i(X), w_i(X)\}_{i=0}^m, t(X))
+$$</p>
+<p>The relation defines a language of statements $(a_1, &hellip;, a_\ell) \in \mathbb{F}^\ell$ and witnesses $(a_{\ell+1}, &hellip;, a_m) \in \mathbb{F}^{m-\ell}$ such that with $a_0=1$</p>
+<p>$$
+\sum_{i=0}^{m}{a_i u_i(X)} \cdot \sum_{i=0}^{m}{a_i v_i(X)} - \sum_{i=0}^{m}{a_i w_i(X)} = h(X)t(X)
+$$
+for some quotinent polynomial $h(X)$.</p>
+<ul>
+<li>$(\sigma, \tau) \leftarrow Setup(R): Pick \ \alpha, \beta, \gamma, \delta, x \leftarrow \mathbb{F}^*$. Set $\tau=(\alpha, \beta, \gamma, \delta, x)$ and
+$$
+\sigma=(\alpha, \beta, \gamma, \delta, \{x^i\}_{i=0}^{n-1},\\ \{\frac{\beta u_i(x)+\alpha v_i(x)+w_i(x)}{\gamma}\}: \{i=0,&hellip;,\ell\}, \\
+\{\frac{\beta u_i(x)+\alpha v_i(x)+w_i(x)}{\delta}\}: \{i=\ell+1,&hellip;,m\}, \\
+\{\frac{x^it(x)}{\sigma}\}: \{i=0,&hellip;,n-2\}
+)
+$$</li>
+<li>$\pi \leftarrow Prove(R, \sigma, a_1, &hellip;, a_m)$: Pick $r,s\leftarrow \mathbb{F}$ and compute a $3\times (m+2n+4)$ matrix $\Pi$ such that $\pi=\Pi\sigma=(A, B, C)$ where
+$$
+A = \alpha+\sum_{i=0}^m a_i u_i(x) + r\delta \\
+A = \beta+\sum_{i=0}^m a_i v_i(x) + s\delta \\
+C = \frac{\sum_{i=\ell+1}^m a_i(\beta u_i(x)+\alpha v_i(x)+w_i(x)) + h(x)t(x)}{\delta} + As+rB-rs\delta
+$$</li>
+<li>$0/1 \leftarrow Verify(R, \sigma, a_1, &hellip;, a_\ell)$: Compute a quadratic multi-variate polynomial $t$ such that $t(\sigma, \pi)$=0 corresponds to the test
+$$
+A\cdot B = \alpha \cdot \beta + \frac{\sum_{i=0}^\ell a_i(\beta u_i(x)+\alpha v_i(x)+w_i(x))}{\gamma}\cdot \gamma+C\cdot \delta
+$$
+Accept the proof if the test passes.</li>
+</ul>
+<p>The role of $\alpha$ and $\beta$ is to ensure $A, B$ and $C$ are consistent with each other in the choice of $a_0,&hellip;,a_m$. The product $\alpha \cdot \beta$ in the verification equation guarantees that $A$ and $B$ involve non-trivial $\alpha$ and $\beta$ components. This means the product $A\cdot B$ involves a linear dependence on $\alpha$ and $\beta$, and this linear dependce can only be balanced out by $C$ with a consistent choice of $a_0,&hellip;,a_m$ in  all three of $A, B$ and $C$.</p>
+<p>The role of $\gamma$ and $\delta$ is to make the two latter products of the verification equation independent from the first product, by dividing the left factors with $\gamma$ and $\delta$ respectively. This prevents mixing and matching of elements intended for different products in the verification equation.</p>
+<p>Finnally, using $r$ and $s$ to randomize the proof to get zero-knowledge.</p>
+<h3 id="22-nizk-auguments-for-qap">2.2 NIZK Auguments for QAP</h3>
+<p>Now, I give the pairing-based NIZK argument for quadratic arithmetic programs. Considering relation generators $R$ that return relations of the form</p>
+<p>$$
+R = (p, aux, \ell, \{u_i(X), v_i(X), w_i(X)\}_{i=0}^m, t(X)) \\
+aux = \mathbb{G}_1, \mathbb{G}_2, \mathbb{G}_T, e \\
+|p| = \lambda
+$$</p>
+<p>The relation defines a field $\mathbb{Z}_p$ and a language of statements</p>
+<p>$$
+(a_1,&hellip;,a_\ell) \in \mathbb{Z}_p^\ell
+$$</p>
+<p>and witnesses $(a_{\ell+1}, &hellip;, a_m) \in \mathbb{Z}_p^{m-\ell}$ such that with $a_0=1$</p>
+<p>$$
+\sum_{i=0}^{m}{a_i u_i(X)} \cdot \sum_{i=0}^{m}{a_i v_i(X)} = \sum_{i=0}^{m}{a_i w_i(X)} + h(X)t(X)
+$$</p>
+<p>Groth16 constructs the pairing-based argument by using the LIP from the previous section &ldquo;in the exponents&rdquo;. The NIZK argument is as follows.</p>
+<ul>
+<li>$(\sigma, \tau) \leftarrow Setup(R)$: Pick arbitrary generators $G$ and $H$ for $\mathbb{G}_1$ and $\mathbb{G}_2$. Pick $\alpha, \beta, \gamma, \delta, x \leftarrow \mathbb{Z}_p^*$. Define $\tau=(\alpha, \beta, \gamma, \delta, x)$ and compute</li>
+</ul>
+<p>$$
+G^\alpha, G^\beta, H^\beta, H^\gamma, G^\delta, H^\delta
+$$</p>
+<p>$$\{G^{x^i}\}_{i=0}^{n-1}$$</p>
+<p>$$\{H^{x^i}\}_{i=0}^{n-1}$$</p>
+<p>$$\{G^\frac{\beta u_i(x)+\alpha v_i(x)+w_i(x)}{\gamma}\}_{i=0}^{\ell}$$</p>
+<p>$$\{G^\frac{\beta u_i(x)+\alpha v_i(x)+w_i(x)}{\delta}\}_{i=\ell+1}^{m}$$</p>
+<p>$$\{G^\frac{x^it(x)}{\delta}\}_{i=0}^{n-2}$$</p>
+<p>Use $\sigma$ indicates all the above.</p>
+<ul>
+<li>$Prove(R, \sigma, a_1, &hellip;, a_m)$: Pick $r, s \leftarrow \mathbb{Z}_p$ and compute $\pi = (A, B, C)$, where</li>
+</ul>
+<p>$$
+A = G^{\alpha+\sum_{i=0}^m a_i u_i(x) + r\delta}
+$$</p>
+<p>$$
+B = H^{\beta+\sum_{i=0}^m a_i v_i(x) + s\delta}
+$$</p>
+<p>$$
+C = G^{\frac{\sum_{i=\ell+1}^m a_i(\beta u_i(x)+\alpha v_i(x)+w_i(x)) + h(x)t(x)}{\delta} + s(\alpha+\sum_{i=0}^m a_i u_i(x))+r(\beta+\sum_{i=0}^m a_i v_i(x))+rs\delta}
+$$</p>
+<ul>
+<li>$Verify(R, \sigma, a_1, &hellip;, a_\ell, \pi)$: Parse $\pi=(A, B, C)\in \mathbb{G}_1\times\mathbb{G}_2\times\mathbb{G}_1$. Accept the proof if and only if
+$$
+e(A, B) = e(G^\alpha, H^\beta)\textbf{T}e(C, H^\delta)
+$$</li>
+</ul>
+<p>$$
+\textbf{T} = e(G^{\frac{\sum_{i=0}^\ell a_i(\beta u_i(x)+\alpha v_i(x)+w_i(x))}{\gamma}},  H^\gamma)
+$$</p>
+<h2 id="reference">Reference</h2>
+<div id="refer-GGPR13"></div>
+<ol>
+<li>
+<p>GGPR13 Gennaro, R., Gentry, C., Parno, B., Raykova, M.: Quadratic span programs and succinct NIZKs without PCPs. In: Johansson, T., Nguyen, P.Q. (eds.) EUROCRYPT 2013. LNCS, vol. 7881, pp. 626–645. Springer, Heidelberg (2013)</p>
+</li>
+<li>
+<p>Groth, Jens. On the size of pairing-based non-interactive arguments. Advances in Cryptology–EUROCRYPT 2016: 35th Annual International Conference on the Theory and Applications of Cryptographic Techniques, Vienna, Austria, May 8-12, 2016, Proceedings, Part II 35. Springer Berlin Heidelberg, 2016.</p>
+</li>
+</ol>
+
+		</section>
+
+		<div class="post-tags">
+			
+			
+			<nav class="nav tags">
+				<ul class="tags">
+					
+					<li><a href="/tags/cryptography">Cryptography</a></li>
+					
+				</ul>
+			</nav>
+			
+			
+		</div>
+	</article>
+</main>
+<footer>
+  <div style="display:flex"><a class="soc" href="https://github.com/wangtsiao" rel="me" title="GitHub"><i data-feather="github"></i></a>
+    <a class="border"></a><a class="soc" href="https://twitter.com/qiaowang1999" rel="me" title="Twitter"><i data-feather="twitter"></i></a>
+    <a class="border"></a></div>
+  <div class="footer-info">
+    2023  
+    
+  </div>
+</footer>
+
+
+<script>
+  feather.replace()
+</script></div>
+    </body>
+</html>

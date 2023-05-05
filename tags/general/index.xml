@@ -2,27 +2,44 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>General on Tsiao Wang&#39;s website</title>
-    <link>https://wangtsiao.github.io/archie/tags/general/</link>
+    <link>https://wangtsiao.github.io/tags/general/</link>
     <description>Recent content in General on Tsiao Wang&#39;s website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 30 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://wangtsiao.github.io/archie/tags/general/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 10 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://wangtsiao.github.io/tags/general/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>A Note on IPA/DARKS/KZG Polynomial Commitment</title>
+      <link>https://wangtsiao.github.io/posts/polynomial-commitment/</link>
+      <pubDate>Mon, 10 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://wangtsiao.github.io/posts/polynomial-commitment/</guid>
+      <description>Polynomial commitment is a cryptographic tool that has numerous applications in areas such as blockchain, zero-knowledge proofs, and secure multiparty computation. It allows one party to commit and later prove to another party that the committed data satisfies certain properties.
+In this post, I will present several polynomial commitment schemes that have proven to be highly valuable, including IPA, DARKS, and KZG. Furthermore, I will provide a comparison of these schemes.</description>
+    </item>
+    
     <item>
       <title>Applying convex optimazation to arbitrage in CFMM</title>
-      <link>https://wangtsiao.github.io/archie/posts/convex-arbitrage/</link>
+      <link>https://wangtsiao.github.io/posts/convex-arbitrage/</link>
       <pubDate>Fri, 30 Dec 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://wangtsiao.github.io/archie/posts/convex-arbitrage/</guid>
+      <guid>https://wangtsiao.github.io/posts/convex-arbitrage/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Where will MEV in blockchain go?</title>
-      <link>https://wangtsiao.github.io/archie/posts/mev-blockchain/</link>
+      <link>https://wangtsiao.github.io/posts/mev-blockchain/</link>
       <pubDate>Tue, 01 Nov 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://wangtsiao.github.io/archie/posts/mev-blockchain/</guid>
-      <description></description>
+      <guid>https://wangtsiao.github.io/posts/mev-blockchain/</guid>
+      <description>// TODO: Preface
+Content
+MEV and several seacher&amp;rsquo;s strategies Original, PBS, and MEV-boost Transaction order-fair consensus algorithm What other opportunities exist in 2023? Reference:
+Eden: https://cosmic-bublanina-39bfbc.netlify.app/
+Flashbot: https://www.flashbots.net/
+Bloxroute: https://bloxroute.com/
+Skip protocol: https://skip.money/
+Order-fair: https://dl.acm.org/doi/abs/10.1145/3494105.3526239</description>
     </item>
     
   </channel>

@@ -2,27 +2,72 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Tsiao Wang&#39;s website</title>
-    <link>https://wangtsiao.github.io/archie/posts/</link>
+    <link>https://wangtsiao.github.io/posts/</link>
     <description>Recent content in Posts on Tsiao Wang&#39;s website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 30 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://wangtsiao.github.io/archie/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 25 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://wangtsiao.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Folding Scheme: A Remarkable Breakthrough in ZKP</title>
+      <link>https://wangtsiao.github.io/posts/folding-schemes/</link>
+      <pubDate>Tue, 25 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://wangtsiao.github.io/posts/folding-schemes/</guid>
+      <description>A folding scheme is defined with respect to an NP relation, and it is a protocol between an untrusted prover and a verifier. Both entities hold two N-sized NP instances, and the prover in addition holds purported witnesses for both instances. The protocol enables the prover and the verifier to output a single N-sized NP instance, which we refer to as a folded instance. A folding scheme guarantees that the folded instance is satisfiable only if the original instances are satisfiable.</description>
+    </item>
+    
+    <item>
+      <title>Groth16 Zero Knowledege Proof Made Not Simple</title>
+      <link>https://wangtsiao.github.io/posts/groth16-snark/</link>
+      <pubDate>Fri, 21 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://wangtsiao.github.io/posts/groth16-snark/</guid>
+      <description>1. Preliminaries 1.1 Bilinear Groups The proof system works with bilinear groups $(p, \mathbb{G}_1, \mathbb{G}_2, \mathbb{G}_T, e)$ with the following properties:
+$\mathbb{G}_1, \mathbb{G}_2, \mathbb{G}_T$ are groups of prime order p $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$ is a bilinear map i.e., $e(U^a, V^b)=e(U, V)^{ab}$ If $G$ is a generator for $\mathbb{G}_1$ and $H$ is a generator for $\mathbb{G}_2$ then $e(G, H)$ is a generator for $\mathbb{G}_T$. There are efficient algorithms for computing group operations, evaluating the bilinear map, deciding membership of the groups, deciding equality of group elements and sampling generators of the groups.</description>
+    </item>
+    
+    <item>
+      <title>An Introduction to Zero-knowledge Virtual Machines</title>
+      <link>https://wangtsiao.github.io/posts/zeroknowledge-vm/</link>
+      <pubDate>Mon, 17 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://wangtsiao.github.io/posts/zeroknowledge-vm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>A Note on IPA/DARKS/KZG Polynomial Commitment</title>
+      <link>https://wangtsiao.github.io/posts/polynomial-commitment/</link>
+      <pubDate>Mon, 10 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://wangtsiao.github.io/posts/polynomial-commitment/</guid>
+      <description>Polynomial commitment is a cryptographic tool that has numerous applications in areas such as blockchain, zero-knowledge proofs, and secure multiparty computation. It allows one party to commit and later prove to another party that the committed data satisfies certain properties.
+In this post, I will present several polynomial commitment schemes that have proven to be highly valuable, including IPA, DARKS, and KZG. Furthermore, I will provide a comparison of these schemes.</description>
+    </item>
+    
     <item>
       <title>Applying convex optimazation to arbitrage in CFMM</title>
-      <link>https://wangtsiao.github.io/archie/posts/convex-arbitrage/</link>
+      <link>https://wangtsiao.github.io/posts/convex-arbitrage/</link>
       <pubDate>Fri, 30 Dec 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://wangtsiao.github.io/archie/posts/convex-arbitrage/</guid>
+      <guid>https://wangtsiao.github.io/posts/convex-arbitrage/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Where will MEV in blockchain go?</title>
-      <link>https://wangtsiao.github.io/archie/posts/mev-blockchain/</link>
+      <link>https://wangtsiao.github.io/posts/mev-blockchain/</link>
       <pubDate>Tue, 01 Nov 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://wangtsiao.github.io/archie/posts/mev-blockchain/</guid>
-      <description></description>
+      <guid>https://wangtsiao.github.io/posts/mev-blockchain/</guid>
+      <description>// TODO: Preface
+Content
+MEV and several seacher&amp;rsquo;s strategies Original, PBS, and MEV-boost Transaction order-fair consensus algorithm What other opportunities exist in 2023? Reference:
+Eden: https://cosmic-bublanina-39bfbc.netlify.app/
+Flashbot: https://www.flashbots.net/
+Bloxroute: https://bloxroute.com/
+Skip protocol: https://skip.money/
+Order-fair: https://dl.acm.org/doi/abs/10.1145/3494105.3526239</description>
     </item>
     
   </channel>

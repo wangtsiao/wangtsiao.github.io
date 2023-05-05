@@ -19,8 +19,8 @@ hr {
   border-top: 3px dotted blue;
 }
 code {
-  background-color: lightblue;
-  color: black;
+  background-color: #232333;
+  color: gainsboro;
   text-decoration: bold;
   padding: 0.1em 0.2em;
 }

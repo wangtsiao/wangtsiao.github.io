@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html><head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>A Note on IPA/DARKS/KZG Polynomial Commitment - Tsiao Wang&#39;s website</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Polynomial commitment is a cryptographic tool that has numerous applications in areas such as blockchain, zero-knowledge proofs, and secure multiparty computation. It allows one party to commit and later prove to another party that the committed data satisfies certain properties.
+In this post, I will present several polynomial commitment schemes that have proven to be highly valuable, including IPA, DARKS, and KZG. Furthermore, I will provide a comparison of these schemes." />
+	<meta property="og:image" content=""/>
+	<meta property="og:title" content="A Note on IPA/DARKS/KZG Polynomial Commitment" />
+<meta property="og:description" content="Polynomial commitment is a cryptographic tool that has numerous applications in areas such as blockchain, zero-knowledge proofs, and secure multiparty computation. It allows one party to commit and later prove to another party that the committed data satisfies certain properties.
+In this post, I will present several polynomial commitment schemes that have proven to be highly valuable, including IPA, DARKS, and KZG. Furthermore, I will provide a comparison of these schemes." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://wangtsiao.github.io/posts/polynomial-commitment/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-04-10T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-04-10T00:00:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="A Note on IPA/DARKS/KZG Polynomial Commitment"/>
+<meta name="twitter:description" content="Polynomial commitment is a cryptographic tool that has numerous applications in areas such as blockchain, zero-knowledge proofs, and secure multiparty computation. It allows one party to commit and later prove to another party that the committed data satisfies certain properties.
+In this post, I will present several polynomial commitment schemes that have proven to be highly valuable, including IPA, DARKS, and KZG. Furthermore, I will provide a comparison of these schemes."/>
+<script src="https://wangtsiao.github.io/js/feather.min.js"></script>
+	
+	
+        <link href="https://wangtsiao.github.io/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css" rel="stylesheet">
+	
+
+	
+	<link rel="stylesheet" type="text/css" media="screen" href="https://wangtsiao.github.io/css/main.5e710c0dc0fca6c435c4ed4ee77fb02dee7ec45c5201ae59282a7d0d4cd48819.css" />
+		<link id="darkModeStyle" rel="stylesheet" type="text/css" href="https://wangtsiao.github.io/css/dark.2dad086d5a7ee67f54c57d9d2b14eab5615e1110bb22e1dcda35439b4a89a5b9.css"  disabled />
+	
+
+	
+	
+		<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+	
+		
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Config({
+			tex2jax: {
+				inlineMath: [['$','$'], ['\\(','\\)']],
+				displayMath: [['$$','$$'], ['\[','\]']],
+				processEscapes: true,
+				processEnvironments: true,
+				skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+				TeX: { equationNumbers: { autoNumber: "AMS" },
+						 extensions: ["AMSmath.js", "AMSsymbols.js"] }
+			}
+		});
+		</script>
+	
+
+	
+	
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css">
+		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js"></script>
+		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+		
+		
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+					renderMathInElement(document.body, {
+							delimiters: [
+									{left: "$$", right: "$$", display: true},
+									{left: "$", right: "$", display: false}
+							]
+					});
+			});
+			</script>
+	
+	
+	
+</head>
+<body>
+        <div class="content"><header>
+	<div class="main">
+		<a href="https://wangtsiao.github.io/">Tsiao Wang&#39;s website</a>
+	</div>
+	<nav>
+		
+		<a href="/posts">All posts</a>
+		
+		<a href="/tags">Tags</a>
+		
+		<a href="/about">About</a>
+		
+		| <span id="dark-mode-toggle" onclick="toggleTheme()"></span>
+		<script src="https://wangtsiao.github.io/js/themetoggle.js"></script>
+		
+	</nav>
+</header>
+
+<main>
+	<article>
+		<div class="title">
+			<h1 class="title">A Note on IPA/DARKS/KZG Polynomial Commitment</h1>
+			<div class="meta">Posted on Apr 10, 2023</div>
+		</div>
+		
+
+		<section class="body">
+			<p>Polynomial commitment is a cryptographic tool that has numerous applications in areas such as blockchain, zero-knowledge proofs, and secure multiparty computation. It allows one party to commit and later prove to another party that the committed data satisfies certain properties.</p>
+<p>In this post, I will present several polynomial commitment schemes that have proven to be highly valuable, including IPA, DARKS, and KZG. Furthermore, I will provide a comparison of these schemes.</p>
+<p>A commitment scheme $\Gamma$ is a tuple $\Gamma=(Setup, Commit, Open)$ of PPT algorithms where:</p>
+<ul>
+<li>$Setup(1^\lambda) \rightarrow pp$ generates public parameters $pp$;</li>
+<li>$Commit(pp;x) \rightarrow (C;r)$ takes a secret message $x$ and outputs a public commitment $C$ and optionally a secret opening hint $r$ which might or might not be the randomness used in the computation.</li>
+<li>$Open(pp, C, x, r) \rightarrow b \in \{0,1\}$ verifies the opening of commitment $C$ to the message $x$ provided with the opening hint $r$.</li>
+</ul>
+<p>A commitment scheme $\Gamma$ is binding if for all PPT adversaries $\mathcal{A}$:</p>
+<p>$$
+Pr\Bigg(b_0 = b_1 \neq 0 \wedge x_0 \neq x_1:
+\begin{array}{c}
+pp \leftarrow Setup(1^\lambda) \\
+(C, x_0, x_1, r_0, r_1)\leftarrow A(pp) \\
+b_0 \leftarrow Open(pp, C, x_0, r_0) \\
+b_1 \leftarrow Open(pp, C, x_1, r_1)
+\end{array} \Bigg) \le negl(\lambda)
+$$</p>
+<p>A polynomial commitment scheme is a tuple of protocols $\Gamma=(Setup, Commit, Open, Eval)$ where $(Setup, Commit, Open)$ is a binding commitment scheme for a meesage space $R[X]$ of polynomails over some ring $R$</p>
+<ul>
+<li>$Eval(pp, C, z, y, d, \mu; f(X)) \rightarrow b\in\{0,1\}$ is an interactive public-coin protocl between a PPT prover $\mathcal{P}$ and verifer $\mathcal{V}$. Both $\mathcal{P}$ and $\mathcal{V}$ have as input a commitment $C$, points $z,y\in R$ and a degree $d$. $\mathcal{P}$ additionally knows the opening of $C$ to a secret polynomial $f(X)\in R[X]$ with $def(f(X))\le d$. The protocol convices the verifier that $f(z)=y$. In a multivariate extension of polynomial commitments, the input $\mu &gt; 1$ indicates the number of variables in the committed polynomial and  $z\in R^\mu$.</li>
+</ul>
+<p>A polynomial commitment scheme is correct if an honest committer can successfully convince the verifier of any evaluation. Specifically, if the prover is honest then for all polynomials $f(X)\in R[X]$ and all points $z\in R$,
+$$
+Pr\Bigg(b = 1:
+\begin{array}{c}
+pp \leftarrow Setup(1^\lambda) \\
+(C; r)\leftarrow Commit(pp, f(X)) \\
+y \leftarrow f(z) \\
+d \leftarrow deg(f(X)) \\
+b \leftarrow Eval(pp, c, z, y, d; f(X), r)
+\end{array}  \Bigg) = 1
+$$</p>
+<p>A polynomial commitment scheme is evaluation binding if no efficient adversary can convince the verifier that the committed polynomial $f(X)$ evaluates to different values $y_0 \neq y_1 \in R$ in the same point $z \in R$.</p>
+<p>A stronger property called knowledge soundness. Any successful prover in the $Eval$ protocol must know a polynomial $f(X)$ such that $f(z) = y$ and $C$ is a commitment to $f(X)$.</p>
+<h2 id="1-inner-product-argument-ipa">1. Inner Product Argument (IPA)</h2>
+<h3 id="11-preliminary">1.1 Preliminary</h3>
+<p>To delve into Inner Product Argument, it is essential to first understand the underlying data structure they rely on: Pedersen commitment, which requires an elliptic curve denoted by a base point $G$. Elliptic curve has an important property, called discrete logarithms, .i.e., given $H$ and $G$ with the property that $H=aG$, if you don&rsquo;t know $a$ then it is computationally infeasible to find $a$. We call $a$ the discrete logarighm of $H$ with repect to $G$.</p>
+<p>Pedersen commitments make use of this infeasibility to construct a commitment scheme. Let&rsquo;s say you have two points $G_0$ and $G_1$ and their discrete logarithm with respect to each other (i.e. the $x\in\mathbb{F}_p$ such that $G_1=xG_0$) is unknown, then we can commit to two numbers $a_0, a_1 \in \mathbb{F}_p$:
+$$
+C = a_0G_0 + a_1G_1
+$$
+$C$ is an element of the elliptic curve. To reveal the commitment, the prover gives the verifier the number $a_0, a_1$, the verifier computes $C$ and if it matches will accept.</p>
+<p>The key property of a commitment scheme is that it is binding. Given $C=a_0G_0+a_1G_1$, could a cheating prover come up with $b_0, b_1 \in \mathbb{F}_p$ such that the verifier will accept them, i.e. such that $C=b_0G_0+b_1G_1$ but with $b_0, b_1 \neq a_0, a_1$.</p>
+<p>The answer is no. Assuming someone found that $a_0G_0+a_1G_1=b_0G_0+b_1G_1$, which implies that
+$$
+(a_0-b_0)G_0 = (b_1-a_1)G_1 \\
+G_0 = \frac{b_1-a_1}{a_0-b_0}G_1=xG_1 \\
+x = \frac{b_1-a_1}{a_0-b_0}
+$$
+Thus he found $x$. Since we know compute discrete logarithm is infeasible, in ptractice no attacker can perform this.</p>
+<p>We can generalize this and commit to a vector, i.e. a list of scalars $a_0,a_1,&hellip;,a_{n-1}\in \mathbb{F}_p$. We just need a basis, i.e. an equal number of group elements that don&rsquo;t have know discrete logarithms between them, then we can compute the commitment</p>
+<p>$$
+C = a_0G_0+a_1G_1+a_2G_2+&hellip;+a_{n-1}G_{n-1}
+$$</p>
+<p>This gives us a vector commitment, although with quite bad complexity: to reveal any element, all elements of the vector have to be revealed. But there is a apealing property: the commitment scheme is additively homomorphic. This means that if we have another commitment $D=b_0G_0+b_1G_1+b_2G_2+&hellip;+b_{n-1}G_{n-1}$, then we can get a new commitment to the sum of the vector $\vec{a}$ and $\vec{b}$</p>
+<p>$$
+C+D=(a_0+b_0)G_0+(a_1+b_1)G_1+(a_2+b_2)G_2+&hellip;+(a_{n-1}+b_{n-1})G_{n-1}
+$$</p>
+<p>The basic straegy of the inner product argument is &ldquo;divide and conquer&rdquo;: Take the problem and instread of completely solving it, turn it into a smaller on of the same type. At some point, it becomes so small that you can simply reveal everything and prove that the instance is correct.</p>
+<p>At each step, the problem size halves. This ensures that after $log\ n$ steps, the problem is reduced to size one, so it can be proved trivially.</p>
+<h3 id="12-the-ipa-protocol">1.2 The IPA Protocol</h3>
+<p>We want to prove that a commitment $C$ is of the form
+$$
+C = \vec{a}\cdot \vec{G} + \vec{b}\cdot\vec{H} + (\vec{a}\cdot\vec{b})q
+$$
+where $\vec{G}=(G_0,G_1,&hellip;,G_{n-1})$ and $\vec{H}=(H_0,H_1,&hellip;,H_{n-1})$ as well as $q$ are &ldquo;basis&rdquo;. They are group elements in elliptic curve and none of their discrete logarithms with respect to each other are known. The nonation $\vec{a}\cdot \vec{G}$ is a product between a vector of scalars $\vec{a}$ and another vector of group elements $\vec{G}$ (points on elliptic curve), and it is defined as
+$$
+\vec{a}\cdot \vec{G} = a_0G_0+a_1G_1+a_2G_2+&hellip;+a_{n-1}G_{n-1}
+$$</p>
+<p>The prover want to convince the verifier that $C$ is of the form $C=\vec{a}\cdot \vec{G} + \vec{b}\cdot\vec{H} + (\vec{a}\cdot\vec{b})q$. Instead of doing this outright, we will only reduce the problem by computing a smaller commitment $C^\prime$ in such a way that if the property holds for $C^\prime$, then it also holds for $C$.</p>
+<p>The prover commits to certain properties, after which the verifier sends a random challenge, which leads to the next commitment $C^\prime$. The random challenge used in IPA is based on public coin model, which means the interactive protocol can be transformed to non-interactive one using the <a href="https://www.wikiwand.com/en/Fiat%E2%80%93Shamir_heuristic">Fiat-Shamir</a> protocol.</p>
+<p>Statement to prove: The commitment $C$ has the form $C=\vec{a}\cdot \vec{G} + \vec{b}\cdot\vec{H} + (\vec{a}\cdot\vec{b})q$ with respect to the basis given by $\vec{G}, \vec{H}, q$. We call the fact that $C$ has this form the &ldquo;Inner Product Property&rdquo;.</p>
+<p>Let $m=\frac{n}{2}$ and $\vec{a}_L$ as the left half of the vector $\vec{a}$, $\vec{a}_R$ as the right half and analogously for $\vec{b}$. Then the prover computes</p>
+<p>$$
+z_L=a_mb_0+a_{m+1}b_1+&hellip;+a_{n-1}b_{m-1} \\
+z_R=a_0b_m+a_{1}b_{m+1}+&hellip;+a_{m-1}b_{n-1}
+$$</p>
+<p>which is</p>
+<p>$$
+z_L = \vec{a}_R\cdot \vec{b}_L \\
+z_R = \vec{a}_L\cdot \vec{b}_R
+$$</p>
+<p>Then the prover computes</p>
+<p>$$
+C_L = \vec{a}_R \cdot \vec{G}_L + \vec{b}_L \cdot \vec{H}_R + z_Lq \\
+C_R = \vec{a}_L \cdot \vec{G}_R + \vec{b}_R \cdot \vec{H}_L + z_Rq
+$$</p>
+<p>and send them to the verifier. Then the verifier sends the chanllenge $x\in\mathbb{F}_p$. The prover computes the updated vectors
+$$
+\vec{a}^\prime = \vec{a}_L + x\vec{a}_R \\
+\vec{b}^\prime = \vec{b}_L + x^{-1}\vec{b}_R
+$$</p>
+<p>which have half the length.</p>
+<p>Now the verifier computes the new commitment:
+$$
+C^\prime = xC_L + C + x^{-1}C_R
+$$</p>
+<p>as well as the updated basis
+$$
+\vec{G}^\prime = \vec{G}_L + x^{-1}\vec{G}_R \\
+\vec{H}^\prime = \vec{H}_L + x\vec{H}_R
+$$</p>
+<p>Now, if the new commitment $C^\prime$ has the property that is of the form $C^\prime=\vec{a}^\prime\cdot \vec{G}^\prime + \vec{b}^\prime\cdot\vec{H}^\prime + (\vec{a}^\prime\cdot\vec{b}^\prime)q$, then the commitment $C$ fulfills the originall claim.</p>
+<p>All the vectors have halved the in size, from here replace $C=C^\prime, \vec{G}=\vec{G}^\prime, \vec{H}=\vec{H}^\prime$ and repeat this step.</p>
+<p>When $n=1$, instead the prover send $\vec{a}, \vec{b}$, which in fact are now only a single scalar each. Then the verifier can simply compute
+$$
+D = aG + bH + abq
+$$
+and accept the statement if this is indeed equal to $C$, or reject if it is not.</p>
+<p>Updating bases $\vec{G}, \vec{H}$ at each round is inefficient. Instead the verifier can simply keep track of the challenge value $x_1, x_2$ up to $x_\ell$ that they will encounter during the $\ell$ rounds.</p>
+<p>Let&rsquo;s call the basis after round $k$ is $\vec{G}_k, \vec{H}_k$.</p>
+<p>The elements $G_\ell, H_\ell$ are scalars, or vectors of length one. Because we end the protocol once our vectors have reached length one. Computing $G_\ell$ from $\vec{G}_0$ is a multiscalar multiplication (MSM) of length $n$. The scalar factor for $\vec{G}_0$ are the coefficients of the polynomial</p>
+<p>$$
+f_G(X) = \prod_{i=0}^{\ell-1}(1+x_{\ell-i}^{-1}X^{2^i})
+$$</p>
+<p>and the scalar factors for $\vec{H}_0$ are given by</p>
+<p>$$
+f_H(X) = \prod_{i=0}^{\ell-1}(1+x_{\ell-i}X^{2^i})
+$$</p>
+<p>Here is an example, we have a length $8$ basis. Each round we add the challenges: $(x1, x2, x3)$.
+<img src="/polynomial-commitment/basis-optimization.png"
+style="display: block;
+margin-left: auto;
+margin-right: auto;
+width: 55%;
+">
+Then we have the final scalar factor $(1, x_3, x_2, x_2x_3, x_1, x_1x_3, x_1x_2, x_1x_2x_3)$. Expanding the polynomial $f_G(X) = \prod_{i=0}^{\ell-1}(1+x_{\ell-i}X^{2^i})$, we have
+$$
+f(x) = 1 + x_3 x + x_2 x^2 + x_2x_3 x^3 + x_1 x^4 + x_1x_3 x^5 + x_1x_2 x^6 + x_1x_2x_3 x^7
+$$</p>
+<p>The coefficients of the polynomial match with the scalar factor.</p>
+<h3 id="13-ipa-evaluating-polynomials">1.3 IPA Evaluating Polynomials</h3>
+<p>Evaluating a polynomial defined by $f(x)=\sum_{i=1}^{n-1}a_i x^i$ at a point $z$, in addition, we want to know the result $f(z)=\vec{a}\cdot\vec{b}$, and not just that $C$ has the &ldquo;Inner Product Property&rdquo;. $\vec{b}=(1,z,z^2,&hellip;,z^{n-1})$ is known to the verifier. We can thus make things a bit easier by removing it from the commitment.</p>
+<p>If we want to verify a polynomial evaluation for the polynomial $f(x)=\sum_{i=1}^{n-1}a_i x^i$, then we are typically working from a commitment $F=\vec{a}\cdot\vec{G}$. The prover would send the verifier the evaluation $y=f(z)$. So it seems like the verifier can just compute the $C=F+\vec{b}\cdot\vec{H}+f(z)q$, since we know $\vec{b}=(1, z, z^2, &hellip;, z^{n-1})$, and start the protocol.</p>
+<p>However, $F$ will be a commitment that is generated by the prover, a malicious prover could cheat by, for example, committing to $F=\vec{a}\cdot\vec{G}+tq$. In this case, they could be able to prove that $f(z)=y-t$, because they have effectively shifted the result.</p>
+<p>To prevent this, after receiving the commitment $F$ and the evaluation $y$, the verifier generates a scalar $w$ and rescales the basis $q:=wq$. Afterwards the protocol can proceed as usual.</p>
+<p>Sometimes the polynomial presents with a points representation, transforming to coeeficient form costs $O(n\ log\ n)$ operations using Fast Fourier Transform. To avoid this cost, we change the commitment to $f$ by commitmentting to the evaluations instead of the coefficients:</p>
+<p>$$
+C = f(x_0)G_0 + f(x_1)G_1 + &hellip; + f(x_{n-1})G_{n-1}
+$$</p>
+<h2 id="2-darks-commitment">2. DARKS Commitment</h2>
+<h3 id="21-preliminary">2.1 Preliminary</h3>
+<p>Wesolowski introduced a simple yet powerful proof of correct exponentiation (&ldquo;PoE&rdquo;) in groups of unknown order. A prover can efficiently convince a verifier that a large scalar multiplication in such a group was done correctly.</p>
+<p>For instance, the prover wishes to convince the verifier that $W = U^x$ for known group elements $U, W \in \mathbb{G}$ and exponent $x \in \mathbb{Z}$, and the verifier wants to verify this with much less work than performing the scalar multiplication. To do this, the verifier samples a large enough prime $\ell$ at random and the prover provides him with $Q \leftarrow U^q$ where $q = [\frac{x}{\ell}]$. The verifier then simply computes the remainder $r \leftarrow (x \ mod \ \ell)$ and checks that $Q^\ell U^r = W$.</p>
+<p>Before presenting the concrete polynomial commitment scheme, we first review the information theoretic abstraction. Let $\llbracket * \rrbracket: \mathbb{Z}_p[X]\rightarrow \mathbb{S}$ be a a homomorphic commitment function that sends polynomials over a prime field to elements of some set $\mathbb{S}$. Moreover, let $\mathbb{S}$ be equipped with operations $* + * : \mathbb{S} \times \mathbb{S} \rightarrow \mathbb{S}$ and $* \cdot * : \mathbb{Z}_p[X] \times \mathbb{S} \rightarrow \mathbb{S}$ that accommodate two homomorphisms for $\llbracket * \rrbracket$:</p>
+<ul>
+<li>linear homomorphism:
+$$
+a\cdot \llbracket f(X) \rrbracket + b\cdot \llbracket g(X) \rrbracket = \llbracket af(X) + bg(X) \rrbracket
+$$</li>
+<li>monomial homomorphism:
+$$
+X^d \cdot \llbracket f(X) \rrbracket = \llbracket X^df(X) \rrbracket
+$$</li>
+</ul>
+<p>The core idea of the DARKS commitment is also &ldquo;divide and conquer&rdquo; which is to reduce the polynomial $f(X)$ of degree $d$ and its evaluation $y=f(z)$, to one about a polynomial $f^\prime(X)$ of degree $d^\prime=[\frac{d}{2}]$ and its evaluation $y^\prime=f^\prime(z)$. Each round, the prover splits $f(X)$ into $f_L(X)$ and $f_R(X)$ such that $f(X)=f_L(X)+x^{d^\prime+1}f_R(X)$ and such both halves have degree at most $d^\prime$. The prover obtains a public coin based random challenge $\alpha \in \mathbb{Z}_p$ from the verifier and proceeds to prove that $f^\prime(X) = f_L(X) + \alpha \cdot f_R(X)$ has degree $d^\prime$ and that $f^\prime(z)=y^\prime=y_L+\alpha y_R$ with $y_L=f_L(z)$ and $y_R =f_R(z)$.</p>
+<p>In the final round, $f(X) = f$ is a constant and the verifier checks that $f = y$.</p>
+<p>The commitment function binds the prover to one particular polynomial for every commitment held by the verifier. At the start of every round, the verifier is in possession of a commitment $\llbracket f(X) \rrbracket$ to $f(X)$. The prover provides commitments $\llbracket f_L(X) \rrbracket$ and $\llbracket f_R(X) \rrbracket$, and the verifier checks their soundness homomorphically by testing $\llbracket f(X) \rrbracket=\llbracket f_L(X) \rrbracket+X^{d^\prime+1}\cdot \llbracket f_R(X) \rrbracket$. From these commitments, the verifier can also compute the commitment to $f^\prime(X)$ homomorphically, via $\llbracket f^\prime(X) \rrbracket=\llbracket f_L(X) \rrbracket + \alpha \cdot \llbracket f_R(X) \rrbracket$. In the last step, the verifier checks that the constant polynomial $f$ matches the commitment by computing $\llbracket f \rrbracket$ outright.</p>
+<h3 id="22-integer-polynomial-encoding">2.2 Integer Polynomial Encoding</h3>
+<p>The DARKS commitment relies integer commitments in a group of unkknown order as a concrete instantiation of the homomorphic commitment scheme.</p>
+<p>Any commitment scheme which is homomorphic over integer polynomials is automatically homomorphic over $\mathbb{Z}_p[X]$ polynomials as well (by reducing integer polynomials modulo p). Polynomials over $\mathbb{Z}_p[X]$ can be lifted to integer polynomials in a canonical way by choosing representatives in $[0,p)$. Therefore, from here on we will focus on building a homomorphic integer encoding of integer polynomials, and how to combine this with a homomorphic integer commitment scheme.</p>
+<p>For a polynomial $g\in\mathbb{Z}[X]$ the norm $||g||_\infty$ is the maximum over the absolute values of all individual coefficients of $g$. Let $\mathbb{Z} := \{x\in\mathbb{Z}: |x|\le b\}$ denote the set of integers with absolute value less than or equal to $b$.</p>
+<p>Define $\mathbb{Z}(b)[X] := \{f\in\mathbb{Z}[X]: ||f||_\infty \le b\}$, the set of integer polynomials with coefficients from $\mathbb{Z}(b)$.</p>
+<ul>
+<li>$Encoding$. For any integer $q$, the function $Enc: \mathbb{Z}(b)[X] \rightarrow \mathbb{Z}$ maps $h(X) \rightarrow h(q)$. A polynomial $f(X) \in \mathbb{Z}_p[X]$ is first mapped to $\mathbb{Z}(p-1)[X]$ by replacing each coefficient of $f$ with its its unique integer representative from $[0,p)$ of the same equivalence class modulo $p$.</li>
+<li>$Decoing$. Decoding works as follows. Define the partial sum $S_k := \sum_{i=0}^k f_iq^i$ with $S_{-1}=0$. Assuming $|f_i|&lt;\frac{q}{2}$ for all $i$, observe that for any partial sum $S_k$ we have $|S_k|&lt;q^{k+1}/2$. Therefore, when $S_k &lt; 0$ then $(S_k \ mod \ q^{k+1}) &gt; q^{k+1}/2$ and when $S_k \ge 0$ then $(S_k \ mod \ q^{k+1})&lt;q^{k+1}/2$. This leads to a decoding strategy for recovering  $S_k$ from $y \in \mathbb{Z}$. The decode algorithm sets $S_k$ to $y \ mod \ q^{k+1}$ if this value is less than $q^{k+1}/2$ and to $q^{k+1}-(y \ mod \ q^{k+1})$ otherwise. Two consecutive partial sums yield a coefficient of $f(X): f_k=\frac{S_k-S_{k-1}}{q^k}\in\mathbb{Z}(b)$. These operations give rise to the following algorithm.</li>
+</ul>
+<h3 id="23-the-scheme">2.3 The Scheme</h3>
+<p>Firstly, the scheme samples a group of unknown order $\mathbb{G}$ and sample a random element $G$ from this group. Then, it lifts the field polynomial $f(X)\in \mathbb{Z}_p[X]$ to an interger polynomial with bounded coefficients, i.e., $\hat{f}(X)\in \mathbb{Z}(p-1)[X]$ such that $\hat{f}(X) \ mod \ p=f(x)$. We encode $\hat{f}(X)$ as an integer by evaluating it at a &ldquo;large enough&rdquo; integer $q$. Finally, we use scalar multiplication in $\mathbb{G}$ to commit to the integer.</p>
+<p>Therefore, $\llbracket f(X) \rrbracket$, corresponds to $\hat{f}(q)\cdot G$. This commitment
+function inherits the homomorphic properties of the integer encoding for a limited number of
+additions and multiplications-by-constant.</p>
+<p>The $Setup$, $Commit$ and $Open$ functionalities are presented formally below.</p>
+<ul>
+<li>$Setup(1^\lambda)$: Sample $\mathbb{G}\leftarrow GGen(\lambda)$ and $G\leftarrow\mathbb{G}$. Return $pp=(\lambda, \mathbb{G}, G, q)$.</li>
+<li>$Commit(pp; f(X)\in\mathbb{Z}_p[X])$: Compute $C\leftarrow \hat{f}(q)\cdot G$ and return $(C;f(X),\hat{f}(X))$.</li>
+<li>$Open(pp, C, f(X), \hat{f}(X))$: Check taht $\hat{f}(X)\in\mathbb{Z}(q/2)[X]$ and $\hat{f}(q)\cdot G=C$ and $f(X)=\hat{f}(X) \ mod \ p=f(x)$.</li>
+</ul>
+<p>Using the cryptographic compilation of the information theoretic protocol, we got an Eval protocol with logarithmic communication. In every round, however, the verifier needs to check consistency between $\llbracket f_L(X) \rrbracket, \llbracket f_R(X) \rrbracket, \llbracket f(X) \rrbracket$. This is done by checking that $C_L + q^{d^\prime+1}\cdot C_R = C$. This naive check is highly inefficient as the exponent $q^{d^\prime+1}$ has $O(d)$ bits. To resolve this inefficiency, the DARK scheme utilize the &ldquo;PoE&rdquo; protocol mentioned above, which is an argument that a large scalar multiplication in a group of unknown order was performed correctly.</p>
+<h2 id="3-kzg-commitment">3. KZG Commitment</h2>
+<p>This commitment is based on elliptic curve pairing. Let $\mathbb{G}_1$ and $\mathbb{G}_2$ be two elliptic curves with a pairing $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$. Let $p$ be the order of $\mathbb{G}_1$ and $\mathbb{G}_2$, and $G$ and $H$ be generators of $\mathbb{G}_1$ and $\mathbb{G}_2$. From now on, I will use a very useful shorthand notation</p>
+<p>$$
+[x]_1 = xG \in \mathbb{G}_1
+$$</p>
+<p>$$
+[x]_2 = xH \in \mathbb{G}_2
+$$</p>
+<p>for any $x\in \mathbb{F}_p$.</p>
+<p>Assuming we have a set of values $(v_1, v_2, …, v_n)$ to commit. KZG commitment reformulates $(v_1, v_2, …, v_n)$ to be committed as a polynomial, such that $p(i)=v_i$. KZG puts the polynomial $p(x)$ on two elliptic curve field.</p>
+<h3 id="31-trusted-setup">3.1 Trusted Setup</h3>
+<p>For some secret $s$, the elements $[s^i]_1$ and $[s^i]_2$ are available to both prover and verifier for $i=0,..,n-1$. Note that neither prover and verifier know the secret $s$. In practice this is usually implemented via a secure multiparty computation (MPC), which allows creating these group elements by a group of computers in a way such that no single computer will know the secret $s$, and all of them would have to collude (or be compromised) in order to reveal it.</p>
+<p>With the elements $[s^i]_1$ and $[s^i]_2$, we can can easily compute things like $c[s^i]_1=cs^iG=[cs^i]_1$ by elliptic curve multiplication, and since they can add elliptic curve points, they can also compute something like
+$$
+c[s^i]_1+d[s^j]_1=(cs^i+ds^j)G=[cs^i+ds^j]
+$$</p>
+<p>In fact, for polynomilal $p(X)=\sum_{i=0}^np_iX^i$, the prover can compute</p>
+<!-- $$
+\[p(s)\]_1 = \[\sum_{i=0}^n p_i s^i\]_1 = \sum_{i=0}^n p_i \[s^i\]_1
+$$ -->
+<p><img src="/polynomial-commitment/kzg-eqt-1.svg" 
+style="display: block;
+margin-left: auto;
+margin-right: auto;
+width: 28%;
+"></p>
+<p>Using this trusted setup, everyone can basically evaluate a polynomial at some secret point $s$ that nobody knows.</p>
+<h3 id="32-the-commitment-scheme">3.2 The Commitment Scheme</h3>
+<p>The element $C=[p(s)]_1$ is the commitment to the polynomial $p(X)$. In the sense that while there are many polynomials with the same commitment, they are impossible to actually compute in practice, this is called computationally binding.</p>
+<p>The proof is simple, now, I use converse method to prove this fact. Let assume a prover (without knowning $s$) try to find another polynomial $q(X) \neq p(X)$ that has the same commitment, i.e. such that $[p(s)]_1=[q(s)]_1$. Then it would mean that $[p(s)-q(s)]_1 = [0]_1$, implying that $p(s)-q(s)=0$.</p>
+<p>Since the prover doesn’t know $s$, the only way they could achieve that $p(s)-q(s)=0$ is by making $q(X) - p(X)=0$ in as many places as possible. But since they can do that in at most $n$ places, they are very unlikely to succeed: since $n$ s much smaller than the degree of the curve $p$, the probability that $s$ will be one of the points they chose to make $q(X) = p(X)$ will be vanishingly tiny.</p>
+<p>let’s say we want to prove that $p(z)=y$. We use the polynomial $p(X)-y$, this polynomial clearly has a root $z$. Let $h(X)$ be the polynomial $p(X)-y$ divided by the linear factor $X-z$,
+$$
+h(X) = \frac{p(X)-y}{X-z}
+$$</p>
+<p>which is equivalent to saying that $h(X)(X-z)=p(X)-y$.</p>
+<p>The verifier checks this proof using the following equation:
+$$
+[h(s)\cdot (s-z)]_T = [p(s)-y]_T
+$$</p>
+<p>Use pairing, the verifier can check the following equation:
+$$
+e([h(s)]_1, [s-z]_2) = e([p(s)-y]_1, [1]_2)
+$$</p>
+<p>KZG commitment scheme has another appealing property: multiproofs. Suppose prover asserts that it has $b_1$ at index $a_1$, &hellip;, $b_m$ at index $a_m$. Then we have $p(a_1)-b_1=0,&hellip;,p(a_m)-b_m=0$. We have identity function $I(x)$ that satisfise $I(a_i)=b_i, i\in \{1, 2, &hellip;, m\}$. Then $p(x)-I(x)=h(x)z(x)$, where $z(x)=(x-a_1)(x-a_2)&hellip;(x-a_m)$. The proof is $[h(s)]$.</p>
+<h2 id="4-summary">4. Summary</h2>
+<table>
+<thead>
+<tr>
+<th>Scheme</th>
+<th>IPA</th>
+<th>DARK</th>
+<th>KZG</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mathematical problem</td>
+<td>discrete logarighm</td>
+<td>groups of unknown order</td>
+<td>pairing group</td>
+</tr>
+<tr>
+<td>Representative application</td>
+<td>halo2</td>
+<td>supersonic</td>
+<td>plonk</td>
+</tr>
+<tr>
+<td>Setup parameters</td>
+<td>$G$ elliptic curve, $g^n$ independent elements in $G$</td>
+<td>$N$ unknown order, $g$ random in $N$, $q$ large integer</td>
+<td>$G_1,G_2$ groups, $g_1,g_2$ generators, $e$ pairing function, $s_k$ secret value in $\mathbb{F}$</td>
+</tr>
+<tr>
+<td>Commitment</td>
+<td>$\sum_{i=0}^n a_i g_i$</td>
+<td>$g \sum_{i=0}^n a_i q^i$</td>
+<td>$g \sum_{i=0}^n a_i s^i$</td>
+</tr>
+<tr>
+<td>Proof size</td>
+<td>$O(log \ n)$</td>
+<td>$O(log \ n)$</td>
+<td>$O(1)$</td>
+</tr>
+<tr>
+<td>Verify time</td>
+<td>$O(log \ n)$</td>
+<td>$O(n)$</td>
+<td>$O(1)$</td>
+</tr>
+</tbody>
+</table>
+
+		</section>
+
+		<div class="post-tags">
+			
+			
+			<nav class="nav tags">
+				<ul class="tags">
+					
+					<li><a href="/tags/general">General</a></li>
+					
+					<li><a href="/tags/cryptography">Cryptography</a></li>
+					
+				</ul>
+			</nav>
+			
+			
+		</div>
+	</article>
+</main>
+<footer>
+  <div style="display:flex"><a class="soc" href="https://github.com/wangtsiao" rel="me" title="GitHub"><i data-feather="github"></i></a>
+    <a class="border"></a><a class="soc" href="https://twitter.com/qiaowang1999" rel="me" title="Twitter"><i data-feather="twitter"></i></a>
+    <a class="border"></a></div>
+  <div class="footer-info">
+    2023  
+    
+  </div>
+</footer>
+
+
+<script>
+  feather.replace()
+</script></div>
+    </body>
+</html>

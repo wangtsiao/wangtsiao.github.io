@@ -2,30 +2,45 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://wangtsiao.github.io/archie/</loc>
+    <loc>https://wangtsiao.github.io/</loc>
+    <lastmod>2023-04-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://wangtsiao.github.io/tags/cryptography/</loc>
+    <lastmod>2023-04-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://wangtsiao.github.io/posts/folding-schemes/</loc>
+    <lastmod>2023-04-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://wangtsiao.github.io/posts/</loc>
+    <lastmod>2023-04-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://wangtsiao.github.io/tags/</loc>
+    <lastmod>2023-04-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://wangtsiao.github.io/posts/groth16-snark/</loc>
+    <lastmod>2023-04-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://wangtsiao.github.io/posts/zeroknowledge-vm/</loc>
+    <lastmod>2023-04-17T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://wangtsiao.github.io/posts/polynomial-commitment/</loc>
+    <lastmod>2023-04-10T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://wangtsiao.github.io/tags/general/</loc>
+    <lastmod>2023-04-10T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://wangtsiao.github.io/posts/convex-arbitrage/</loc>
     <lastmod>2022-12-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://wangtsiao.github.io/archie/posts/convex-arbitrage/</loc>
-    <lastmod>2022-12-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://wangtsiao.github.io/archie/tags/general/</loc>
-    <lastmod>2022-12-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://wangtsiao.github.io/archie/posts/</loc>
-    <lastmod>2022-12-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://wangtsiao.github.io/archie/tags/</loc>
-    <lastmod>2022-12-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://wangtsiao.github.io/archie/posts/mev-blockchain/</loc>
+    <loc>https://wangtsiao.github.io/posts/mev-blockchain/</loc>
     <lastmod>2022-11-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://wangtsiao.github.io/archie/about/</loc>
+    <loc>https://wangtsiao.github.io/about/</loc>
     <lastmod>2021-09-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://wangtsiao.github.io/archie/archives/</loc>
+    <loc>https://wangtsiao.github.io/archives/</loc>
     <lastmod>2019-05-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://wangtsiao.github.io/archie/categories/</loc>
+    <loc>https://wangtsiao.github.io/categories/</loc>
   </url>
 </urlset>

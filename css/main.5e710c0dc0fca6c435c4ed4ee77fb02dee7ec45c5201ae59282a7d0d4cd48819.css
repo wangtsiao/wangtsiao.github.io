@@ -12,7 +12,7 @@ html {
   color: #232333;
   font-family: 'Roboto Mono', monospace;
   font-size: 15px;
-  line-height: 2.5em;
+  line-height: 1.2em;
 }
 body{
   display: block;
@@ -29,7 +29,7 @@ body{
 
 p {
   font-family: 'Fira Sans', sans-serif;
-  line-height: 3.5;
+  line-height: 1.8;
 }
 
 hr {

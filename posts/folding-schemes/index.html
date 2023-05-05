@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html><head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Folding Scheme: A Remarkable Breakthrough in ZKP - Tsiao Wang&#39;s website</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="A folding scheme is defined with respect to an NP relation, and it is a protocol between an untrusted prover and a verifier. Both entities hold two N-sized NP instances, and the prover in addition holds purported witnesses for both instances. The protocol enables the prover and the verifier to output a single N-sized NP instance, which we refer to as a folded instance. A folding scheme guarantees that the folded instance is satisfiable only if the original instances are satisfiable." />
+	<meta property="og:image" content=""/>
+	<meta property="og:title" content="Folding Scheme: A Remarkable Breakthrough in ZKP" />
+<meta property="og:description" content="A folding scheme is defined with respect to an NP relation, and it is a protocol between an untrusted prover and a verifier. Both entities hold two N-sized NP instances, and the prover in addition holds purported witnesses for both instances. The protocol enables the prover and the verifier to output a single N-sized NP instance, which we refer to as a folded instance. A folding scheme guarantees that the folded instance is satisfiable only if the original instances are satisfiable." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://wangtsiao.github.io/posts/folding-schemes/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-04-25T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-04-25T00:00:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Folding Scheme: A Remarkable Breakthrough in ZKP"/>
+<meta name="twitter:description" content="A folding scheme is defined with respect to an NP relation, and it is a protocol between an untrusted prover and a verifier. Both entities hold two N-sized NP instances, and the prover in addition holds purported witnesses for both instances. The protocol enables the prover and the verifier to output a single N-sized NP instance, which we refer to as a folded instance. A folding scheme guarantees that the folded instance is satisfiable only if the original instances are satisfiable."/>
+<script src="https://wangtsiao.github.io/js/feather.min.js"></script>
+	
+	
+        <link href="https://wangtsiao.github.io/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css" rel="stylesheet">
+	
+
+	
+	<link rel="stylesheet" type="text/css" media="screen" href="https://wangtsiao.github.io/css/main.5e710c0dc0fca6c435c4ed4ee77fb02dee7ec45c5201ae59282a7d0d4cd48819.css" />
+		<link id="darkModeStyle" rel="stylesheet" type="text/css" href="https://wangtsiao.github.io/css/dark.2dad086d5a7ee67f54c57d9d2b14eab5615e1110bb22e1dcda35439b4a89a5b9.css"  disabled />
+	
+
+	
+	
+		<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+	
+		
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Config({
+			tex2jax: {
+				inlineMath: [['$','$'], ['\\(','\\)']],
+				displayMath: [['$$','$$'], ['\[','\]']],
+				processEscapes: true,
+				processEnvironments: true,
+				skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+				TeX: { equationNumbers: { autoNumber: "AMS" },
+						 extensions: ["AMSmath.js", "AMSsymbols.js"] }
+			}
+		});
+		</script>
+	
+
+	
+	
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css">
+		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js"></script>
+		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+		
+		
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+					renderMathInElement(document.body, {
+							delimiters: [
+									{left: "$$", right: "$$", display: true},
+									{left: "$", right: "$", display: false}
+							]
+					});
+			});
+			</script>
+	
+	
+	
+</head>
+<body>
+        <div class="content"><header>
+	<div class="main">
+		<a href="https://wangtsiao.github.io/">Tsiao Wang&#39;s website</a>
+	</div>
+	<nav>
+		
+		<a href="/posts">All posts</a>
+		
+		<a href="/tags">Tags</a>
+		
+		<a href="/about">About</a>
+		
+		| <span id="dark-mode-toggle" onclick="toggleTheme()"></span>
+		<script src="https://wangtsiao.github.io/js/themetoggle.js"></script>
+		
+	</nav>
+</header>
+
+<main>
+	<article>
+		<div class="title">
+			<h1 class="title">Folding Scheme: A Remarkable Breakthrough in ZKP</h1>
+			<div class="meta">Posted on Apr 25, 2023</div>
+		</div>
+		
+
+		<section class="body">
+			<p>A folding scheme is defined with respect to an NP relation, and it is a protocol between an untrusted prover and a verifier. Both entities hold two N-sized NP instances, and the prover in addition holds purported witnesses for both instances. The protocol enables the prover and the verifier to output a single N-sized NP instance, which we refer to as a folded instance. A folding scheme guarantees that the folded instance is satisfiable only if the original instances are satisfiable.</p>
+<p>Several existing techniques exhibit the two-to-one reduction pattern of folding schemes. Examples include the sumcheck protocol, the split-and-fold techniques in inner product arguments(IPA).</p>
+<p>Nova presented a folding scheme that merely reduces the satisfiability of two NP instances to the satisfiability of a single NP instance. The folding scheme focused on R1CS, which is a popular NP-complete language, however, it is difficult to devise a folding scheme for original R1CS. To address this, Nova introduces a variant of R1CS, called relaxed R1CS.</p>
+<p>The folding scheme is a constant-round, public-coin, zero-knowledge for N-sized relaxed R1CS isntances over a finite field $\mathbb{F}$, the prover&rsquo;s work is $O_\lambda(N)$, and the verifier&rsquo;s work and the communication are both $O_\lambda(1)$, assuming the existence of any additively-homomorphic commitment scheme that provides $O_\lambda(1)$-sized commitments to $N$-sized vectors over $\mathbb{F}$, e.g., Pedersen commitments, where $\lambda$ is the security parameter. My previous blog post mentioned <a href="/archie/posts/polynomial-commitment/">Pedersen commitments</a>.</p>
+<h2 id="preliminary">Preliminary</h2>
+<p>Incrementally verifiable computation (IVC) enables verifiable computation for repeated function application. Intuitively, for a function $F$, with initial input $z_0$, an IVC scheme allows a prover to produce a proof $\Pi_i$ for the statement $z_i = F^{(i)}(z_0)$ (i.e., $i$ applications of $F$ on input $z_0$) given a proof $\Pi_{i-1}$ for the statement $z_{i-1} = F^{(i-1)}(z_0)$. Formally, IVC schemes additionally permit $F$ to take auxiliary input $\omega$.</p>
+<p>An incrementally verifiable computation (IVC) scheme is defined by PPT algorithms $(\mathcal{G}, \mathcal{P}, \mathcal{V})$ and deterministic $\mathcal{K}$ denoting the generator, the prover, the verifier, and the encoder respectively. An IVC scheme $(\mathcal{G}, \mathcal{K}, \mathcal{P}, \mathcal{V})$ satisfies perfect completeness if for any PPT adversary $\mathcal{A}$
+$$
+Pr\Bigg[ \mathcal{V}(vk, i, z_0, z_i, \Pi_i) = 1 \ |
+\begin{array}{c}
+pp \leftarrow \mathcal{G}(1^\lambda), \\
+F, (i, z_0, z_i, z_{i-1}, \omega_{i-1}, \Pi_{i-1})\leftarrow \mathcal{A}(pp), \\
+(pk, vk) \leftarrow \mathcal{K}(pp, F), \\
+z_i = F(z_{i-1}, \omega_{i-1}), \\
+\mathcal{V}(vk, i-1, z_0, z_{i-1}, \Pi_{i-1}) = 1, \\
+\Pi_i \leftarrow \mathcal{P}(pk, i, z_0, z_i; z_{i-1}, \omega_{i-1}, \Pi_{i-1})
+\end{array}\Bigg] = 1
+$$</p>
+<p>where $F$ is a polynomial time computable function. Likewise, an IVC scheme satisfies knowledge-soundness if for any constant $n \in \mathbb{N}$, and expected polynomial time adversaries $\mathcal{P}^*$ there exists expected polynomial-time extractor $\mathcal{E}$ such that for any input randomness $\rho$</p>
+<p>$$
+Pr\Bigg[\begin{array}{c}
+z_n\ne z, \\ \mathcal{V}(vk, i, z_0, z, \Pi) = 1
+\end{array}
+|
+\begin{array}{c}
+pp \leftarrow \mathcal{G}(1^\lambda), \\
+F, (z_0, z, \Pi) \leftarrow \mathcal{P}^*(pp; \rho), \\
+(pk, vk) \leftarrow \mathcal{K}(pp, F), \\
+(\omega_0, &hellip;, \omega_{n-1}) \leftarrow \mathcal{E}(pp, z_0, z; \rho), \\
+z_i \leftarrow F(z_{i-1}, \omega_{i-1})  \ \forall i\in\{1,&hellip;,n\}
+\end{array}\Bigg] \le negl(\lambda)
+$$</p>
+<p>An IVC scheme satisfies succinctness if the size of the IVC proof $\Pi$ does not grow with the number of applications $n$.</p>
+<h2 id="novas-folding-scheme-relaxed-r1cs">Nova&rsquo;s Folding Scheme (Relaxed R1CS)</h2>
+<p><strong>R1CS</strong>: Consider a finite field $\mathbb{F}$. Let the public parameters consist of size bounds $m,n,\ell \in \mathbb{N}$ where $m &gt; \ell$. The R1CS structure consists of sparse matrices $A,B,C \in \mathbb{F}^{m\times m}$ with at most $n = \Omega(m)$ non-zero entries in each matrix. An instance $x \in \mathbb{F}^\ell$ consists of public inputs and outputs and is satisfied by a witness $W \in \mathbb{F}^{m−\ell−1}$ if $(A\cdot Z)\circ(B\cdot Z) = C\cdot Z$, where $Z = (W,x,1)$.</p>
+<p>Folding scheme can fold two R1CS instances with the same R1CS matrix $(A, B, C)$. Specif- ically, given R1CS matrices $(A, B, C)$, and two corresponding instance-witness pairs $(x_1,W_1)$ and $(x_2,W_2)$, we would like to devise a scheme that reduces the task of checking both instances into the task of checking a single new instance witness pair $(x, W)$ against the same R1CS matrices $(A,B,C)$.</p>
+<p>As R1CS is an algebraic system, the most direct approach would be to take a random linear combination. In another word, the prover sends witnesses $(x_1,W_1)$ and $(x_2,W_2)$ in the first step, then the verifier responds with a random $r \in \mathbb{F}$; the prover and the verifier both compute
+$$
+x \leftarrow x_1 + r\cdot x_2 \\
+W \leftarrow W_1 + r \cdot W_2
+$$</p>
+<p>and set the new instance-witness pair to be $(x, W)$. However, for $Z_1 = (W_1,x_1,1)$ and $Z_2 = (W_2,x_2,1)$, and $Z = (W,x,1)$, we have $AZ\circ BZ = A(Z_1+r\cdot Z_2)\circ B(Z_1+r\cdot Z_2) \neq CZ$.</p>
+<p>To handle this, the Nova presents a error vector $E\in \mathbb{F}^m$, then construct a variant of R1CS with these additional terms as relaxed R1CS.</p>
+<p><strong>relaxed R1CS</strong>: Consider a finite field $\mathbb{F}$. Let the public parameters consist of size bounds $m,n,\ell \in \mathbb{N}$ where $m &gt; \ell$. The relaxed R1CS structure consists of sparse matrices $A,B,C \in \mathbb{F}^{m\times m}$ with at most $n = \Omega(m)$ non-zero entries in each matrix. An relaxed R1CS instance consists of an error vector $E\in \mathbb{F}^m$, a scalar $u\in \mathbb{F}$, and public inputs and outputs $x \in \mathbb{F}^\ell$. An instance $(E,u,x)$ is satisfied by a witness $W \in \mathbb{F}^{m−\ell−1}$ if $(A\cdot Z)\circ(B\cdot Z) = u\cdot (C\cdot Z) + E$, where $Z = (W,x,u)$.</p>
+<p>Any R1CS instance can be expressed as a relaxed R1CS instance by augmenting it with $u = 1$ and $E = 0$. Now we have</p>
+<p>$$
+u \leftarrow u_1 + r\cdot u_2 \\
+E \leftarrow E_1 + r \cdot (AZ_1 \circ BZ_2 + AZ_2 \circ BZ_1 - u_1CZ_2-u_2CZ_1) + r^2 \cdot E_2
+$$</p>
+<p>$$
+AZ \circ BZ = AZ_1 \circ BZ_1 + r\cdot (AZ_1 \circ BZ_2 + AZ_2 \circ BZ_1) + r^2 (AZ_2\circ BZ_2)
+$$</p>
+<p>$$
+AZ \circ BZ = (u_1+r\cdot u_2)\cdot C(Z_1+rZ_2) + E = uCZ + E
+$$</p>
+<p>A folding scheme is said to be non-trivial if the verifier’s costs and the communication are lower in the case where the verifier participates in the folding scheme and then verifies a purported NP witness for the folded instance than the case where the verifier verifies purported NP witnesses for each of the original instances.</p>
+<p>The folding scheme above is not non-trivial; it is also not zero-knowledge. To circumvent these issues, Nova uses succinct and hiding additively homomorphic commitments to $W$ and $E$ in the instance, and treat both $W$ and $E$ as the witness. The prover sends a single commitment to aid the verifier in computing commitments to the folded witness $(W,E)$.</p>
+<p>A committed relaxed R1CS instance is a tuple $(\overline{E}, u, \overline{W}, x)$, where $\overline{E}$ and $\overline{W}$ are commitments, $u \in \mathbb{F}$, and $x \in \mathbb{F}^\ell$ are public inputs and outputs. An instance $(\overline{E}, u, \overline{W}, x)$ is satisfied by a witness $(E, r_E, W, r_W) \in (\mathbb{F}^m, \mathbb{F}, \mathbb{F}^{m-\ell-1}, \mathbb{F})$ if $\overline{E} = Com(pp_E, E, r_E)$, $\overline{W} = Com(pp_W, W, r_W)$, and $(A\cdot Z)\circ(B\cdot Z) = u\cdot (C\cdot Z) + E$, where $Z = (W,x,u)$. Where $Com()$ is the commitment scheme.</p>
+<p>The verifier $\mathcal{V}$ takes two committed relaxed R1CS instances $(\overline{E}_1, u_1, \overline{W}_1, x_1)$ and $(\overline{E}_2, u_2, \overline{W}_2, x_2)$.</p>
+<p>The prover $\mathcal{P}$, in addition to the two instances, takes wit- nesses to both instances, $(E_1, r_{E_1}, W_1, r_{W_1})$ and $(E_2, r_{E_2}, W_2, r_{W_2})$. Let $Z_1 = (W_1, x_1, u_1)$ and $Z_2 = (W_2, x_2 u_2)$. The prover and the verifier proceed as follows.</p>
+<ol>
+<li>$\mathcal{P}$: Send $\overline{T} := Comm(pp_E, T, r_T)$, where $r_T \leftarrow_R \mathbb{F}$ and with cross term</li>
+</ol>
+<p>$$
+T = AZ_1 \circ BZ_2 + AZ_2 \circ BZ_1 - u_1 \cdot CZ_2 - u_2 \cdot CZ_1
+$$</p>
+<ol start="2">
+<li>$\mathcal{V}$: Sample and send challenge $r \leftarrow_R \mathbb{F}$.</li>
+<li>$\mathcal{V}, \mathcal{P}$: Output the folded instance $(\overline{E}, u, \overline{W}, x)$ where</li>
+</ol>
+<p>$$
+\overline{E} \leftarrow \overline{E}_1 + r\cdot \overline{T} + r^2 \cdot \overline{E}_2 \\
+u \leftarrow u_1 + r \cdot u_2 \\
+\overline{W} \leftarrow \overline{W}_1 + r\cdot \overline{W}_2 \\
+x \leftarrow x_1 + r \cdot x_2
+$$</p>
+<ol start="4">
+<li>$\mathcal{P}$: Output the folded witness $(E, r_E, W, r_W)$, where</li>
+</ol>
+<p>$$
+E \leftarrow E_1 + r\cdot T + r^2\cdot E_2 \\
+r_E \leftarrow  r_{E_1} + r\cdot  r_T + r^2 \cdot r_{E_2} \\
+W \leftarrow W_1 + r\cdot W_2 \\
+r_W \leftarrow r_{W_1} + r\cdot r_{W_2}
+$$</p>
+<p>Finnally, using Fiat- Shamir transform to achieve non-interactivity.</p>
+<h2 id="sangiras-folding-scheme-relaxed-plonk">Sangira&rsquo;s Folding Scheme (Relaxed Plonk)</h2>
+<p>Inspired by Nova&rsquo;s relaxed R1CS, Sangira gives the relaxed Plonk. PLONK breaks down circuit verification into a check that the input-output behavior of each gate is correct, which is a fairly simple constraint system. Each gate has a label $i\in \{1,2,&hellip;,n+s+1\}$ and corresponds to the constraint equation</p>
+<p>$$
+Q_i^La_i+Q_i^Rb_i+Q_i^Ma_ib_i+Q_i^C=Q_i^Oc_i
+$$</p>
+<p>where</p>
+<ul>
+<li>$a_i$ is the left input wire, $b_i$ is the right input wire, $c_i$ is the output wire.</li>
+<li>If gate $i$ is an addition gate then $Q^L_i=Q^R_i=Q^O_i=1$.</li>
+<li>If gate $i$ is a multiplication gate then $Q^M_i=Q^O_i=1$, and $Q_i^L=Q_i^R=Q_i^C=0$.</li>
+<li>If gate $i$ is a constant gate (always outputting $C_i \in \mathbb{F}$) then $Q_i^C=C_i$ and $Q_i^O=1$ and $Q_i^L=Q_i^R=Q_i^M=0$.</li>
+</ul>
+<p>so that the sequences $Q^L,Q^R,Q^M,Q^C,Q^O$ are “selector” sequences, selecting the gate type by making the irrelevant constant terms zero. We denote $\mathcal{Q}=\{Q^L,Q^R,Q^M,Q^C,Q^O\}$ the set of selector vectors.</p>
+<p>Gates are &ldquo;wired&rdquo; together using copy constraints enforcing for example that $a_3=c_1$, that is the left input to gate3 is the output of gate1. We denote $\mathcal{S}$ the set of copy constraints.</p>
+<p>A plonk circuit is fully defined by the tuple $(\mathcal{Q}, \mathcal{S})$.</p>
+<p><img src="/folding-scheme/plonk-arithmetization.png" width="50%" 
+style="display: block;
+margin-left: auto;
+margin-right: auto;
+width: 50%;
+"></p>
+<p>Sangira uses the same insights as Nova:</p>
+<ul>
+<li>Folding is performed by taking a random linear combination of the input instance-witness pairs.</li>
+<li>Cross terms are absorbed into an error (or slack) vector and a scaling factor.</li>
+<li>The scheme is made non-trivial by working over additively homomorphic commitments to the witness and slack vector.</li>
+</ul>
+<p>A relaxed plonk trace is represented by the tuple $(a, b, c, u, e)$, where $u \in \mathbb{F}$ and error vector $e \in \mathbb{F}^{n+s+1}$. The relaxed plonk gate equation as
+$$
+C^\prime_{\mathcal{Q}, i}(a, b, c, u, e) = u[Q_i^La_i+Q_i^Rb_i+Q_i^Oc_i] + Q_i^Ma_ib_i+Q_i^C+e_i
+$$</p>
+<p>For a plonk instance witness pair $(x, W)$, sangira defines a relaxed plonk instance witness pair $(U, W)$
+$$
+U = (x, u, \overline{W_a}, \overline{W_b}, \overline{W_c}, \overline{e}) \\
+W = (W, e, r_a, r_b, r_c, r_e)
+$$</p>
+<p>where $\overline{W_a}=Com(pp_W, w_a; r_a)$, $\overline{W_b}=Com(pp_W, w_b; r_b)$, $\overline{W_c}=Com(pp_W, w_c; r_c)$ and $\overline{e}=Com(pp_E, e; r_e)$.</p>
+<p>Any plonk relation can be transformed into a relaxed plonk relation by setting $u=1, e=0$ and providing the necessary commitments.</p>
+
+		</section>
+
+		<div class="post-tags">
+			
+			
+			<nav class="nav tags">
+				<ul class="tags">
+					
+					<li><a href="/tags/cryptography">Cryptography</a></li>
+					
+				</ul>
+			</nav>
+			
+			
+		</div>
+	</article>
+</main>
+<footer>
+  <div style="display:flex"><a class="soc" href="https://github.com/wangtsiao" rel="me" title="GitHub"><i data-feather="github"></i></a>
+    <a class="border"></a><a class="soc" href="https://twitter.com/qiaowang1999" rel="me" title="Twitter"><i data-feather="twitter"></i></a>
+    <a class="border"></a></div>
+  <div class="footer-info">
+    2023  
+    
+  </div>
+</footer>
+
+
+<script>
+  feather.replace()
+</script></div>
+    </body>
+</html>
