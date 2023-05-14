@@ -191,9 +191,9 @@ $$</p>
 $$
 au^T + av^T = aw^T
 $$
-We call the above format as R1CS which is usually used as frontend in many zero knowledge proof systems. Following GGPR13<a href="#refer-GGPR13"><sup>1</sup></a>, we reformulate the R1CS to QAP. We take the finite field as $\mathbb{F}=\mathbb{Z}_{mod \ q}$ where $q=97$ (cause 97 is a prime number), then we choose distinct $r_1, &hellip; , r_3 \in \mathbb{F}$ as $1, 2, 3$.</p>
-<p>Now, using $u_i, v_i, w_i$ indicates polynomials, we have $u_i(1)=u_{i,1}, u_i(2)=u_{i,2}, u_i(3)=u_{i,3}$. Using lagrange interpolation we get those polynomials, $u_i, v_i, w_i$ for $i \in \{0, &hellip;, 4\}$.</p>
-<p>Then we have the following equation for $t(X)=(X-1)(X-2)(X-3)$.
+We call the above format as R1CS which is usually used as frontend in many zero knowledge proof systems. Following GGPR13<a href="#refer-GGPR13"><sup>1</sup></a>, we reformulate the R1CS to QAP. We take the finite field as $\mathbb{F}=\mathbb{Z}_{mod \ q}$ where $q$ is a prime number, then we randomly choose distinct $r_1, &hellip; , r_3 \in \mathbb{F}$.</p>
+<p>Now, using $u_i, v_i, w_i$ indicates polynomials, we have $u_i(r_1)=u_{i,1}, u_i(r_2)=u_{i,2}, u_i(r_3)=u_{i,3}$. Using lagrange interpolation we get those polynomials, $u_i, v_i, w_i$ for $i \in \{0, &hellip;, m\}$.</p>
+<p>Then we have the following equation for $t(X)=(X-r_1)(X-r_2)(X-r_3)$.
 $$
 \sum_{i=0}^{m}{a_i u_i(X)} \cdot \sum_{i=0}^{m}{a_i v_i(X)} \equiv \sum_{i=0}^{m}{a_i w_i(X)} \ mod \ t(X)
 $$</p>
@@ -223,7 +223,7 @@ for some quotinent polynomial $h(X)$.</p>
 $$
 \sigma=(\alpha, \beta, \gamma, \delta, \{x^i\}_{i=0}^{n-1},\\ \{\frac{\beta u_i(x)+\alpha v_i(x)+w_i(x)}{\gamma}\}: \{i=0,&hellip;,\ell\}, \\
 \{\frac{\beta u_i(x)+\alpha v_i(x)+w_i(x)}{\delta}\}: \{i=\ell+1,&hellip;,m\}, \\
-\{\frac{x^it(x)}{\sigma}\}: \{i=0,&hellip;,n-2\}
+\{\frac{x^it(x)}{\delta}\}: \{i=0,&hellip;,n-2\}
 )
 $$</li>
 <li>$\pi \leftarrow Prove(R, \sigma, a_1, &hellip;, a_m)$: Pick $r,s\leftarrow \mathbb{F}$ and compute a $3\times (m+2n+4)$ matrix $\Pi$ such that $\pi=\Pi\sigma=(A, B, C)$ where
