@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html><head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Polynomial and Number Theoretic Transform - Tsiao Wang&#39;s website</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Polynomials are an fundamental mathematical tool within the field of cryptography, where they play a vital role in the design of zero knowledge proofs and the implementation of secure communication systems. In cryptography, the utilization of polynomials diverges from their traditional usage, as they are defined over a finite field rather than the real numbers. Unless explicitly stated otherwise, all operations discussed in this blog pertain to integers within a finite field." />
+	<meta property="og:image" content=""/>
+	<meta property="og:title" content="Polynomial and Number Theoretic Transform" />
+<meta property="og:description" content="Polynomials are an fundamental mathematical tool within the field of cryptography, where they play a vital role in the design of zero knowledge proofs and the implementation of secure communication systems. In cryptography, the utilization of polynomials diverges from their traditional usage, as they are defined over a finite field rather than the real numbers. Unless explicitly stated otherwise, all operations discussed in this blog pertain to integers within a finite field." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://wangtsiao.github.io/posts/lagrange-poly-ntt/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-05-15T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-05-15T00:00:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Polynomial and Number Theoretic Transform"/>
+<meta name="twitter:description" content="Polynomials are an fundamental mathematical tool within the field of cryptography, where they play a vital role in the design of zero knowledge proofs and the implementation of secure communication systems. In cryptography, the utilization of polynomials diverges from their traditional usage, as they are defined over a finite field rather than the real numbers. Unless explicitly stated otherwise, all operations discussed in this blog pertain to integers within a finite field."/>
+<script src="https://wangtsiao.github.io/js/feather.min.js"></script>
+	
+	
+        <link href="https://wangtsiao.github.io/css/fonts.2c2227b81b1970a03e760aa2e6121cd01f87c88586803cbb282aa224720a765f.css" rel="stylesheet">
+	
+
+	
+	<link rel="stylesheet" type="text/css" media="screen" href="https://wangtsiao.github.io/css/main.5e710c0dc0fca6c435c4ed4ee77fb02dee7ec45c5201ae59282a7d0d4cd48819.css" />
+		<link id="darkModeStyle" rel="stylesheet" type="text/css" href="https://wangtsiao.github.io/css/dark.2dad086d5a7ee67f54c57d9d2b14eab5615e1110bb22e1dcda35439b4a89a5b9.css"  disabled />
+	
+
+	
+	
+		<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+	
+		
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Config({
+			tex2jax: {
+				inlineMath: [['$','$'], ['\\(','\\)']],
+				displayMath: [['$$','$$'], ['\[','\]']],
+				processEscapes: true,
+				processEnvironments: true,
+				skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+				TeX: { equationNumbers: { autoNumber: "AMS" },
+						 extensions: ["AMSmath.js", "AMSsymbols.js"] }
+			}
+		});
+		</script>
+	
+
+	
+	
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css">
+		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js"></script>
+		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+		
+		
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+					renderMathInElement(document.body, {
+							delimiters: [
+									{left: "$$", right: "$$", display: true},
+									{left: "$", right: "$", display: false}
+							]
+					});
+			});
+			</script>
+	
+	
+	
+</head>
+<body>
+        <div class="content"><header>
+	<div class="main">
+		<a href="https://wangtsiao.github.io/">Tsiao Wang&#39;s website</a>
+	</div>
+	<nav>
+		
+		<a href="/posts">All posts</a>
+		
+		<a href="/tags">Tags</a>
+		
+		<a href="/about">About</a>
+		
+		| <span id="dark-mode-toggle" onclick="toggleTheme()"></span>
+		<script src="https://wangtsiao.github.io/js/themetoggle.js"></script>
+		
+	</nav>
+</header>
+
+<main>
+	<article>
+		<div class="title">
+			<h1 class="title">Polynomial and Number Theoretic Transform</h1>
+			<div class="meta">Posted on May 15, 2023</div>
+		</div>
+		
+
+		<section class="body">
+			<p>Polynomials are an fundamental mathematical tool within the field of cryptography, where they play a vital role in the design of zero knowledge proofs and the implementation of secure communication systems. In cryptography, the utilization of polynomials diverges from their traditional usage, as they are defined over a finite field rather than the real numbers. Unless explicitly stated otherwise, all operations discussed in this blog pertain to integers within a finite field.</p>
+<p>In most cases, we utilize monomial representation to express a polynomial of degree $k$.
+$$
+p(x) = \sum_{i=0}^{k}a_i x^i
+$$</p>
+<p>There exists an alternative representation method called Lagrange polynomial, which allows us to represent a polynomial of degree $k$ using $k$ points. Given a data set of coordinate pairs $(x_j, y_j)$ with $j=\{0,&hellip;,k\}$, where $x_j\ne x_m$ for indices $j\ne m$, the Lagrange polynomial $L(x)$ has degree $\le k$ and for each $j$, $L(x_j)=y_j$. The Lagrange basis for polynomials of degree $\le k$ is the set of polynomials $\{\ell_0(x), \ell_1(x), &hellip;, \ell_k(x)\}$ each of degree $k$ which take values $\ell_j(x_m)=0$ if $m\ne j$ and $\ell_j(x_j) = 1$. Each basis polynomial can be explicitly described by the product:</p>
+<p>$$
+\ell_j(x) = \frac{(x-x_0)}{(x_j-x_0)}&hellip;\frac{(x-x_{j-1})}{(x_j-x_{j-1})}\frac{(x-x_{j+1})}{(x_j-x_{j+1})}&hellip;\frac{(x-x_k)}{(x_j-x_k)}
+$$</p>
+<p>It is also written as
+$$
+\ell_j(x) = \prod_{0\le m\le k, m\ne j} \frac{(x-x_m)}{(x_j-x_m)}
+$$</p>
+<p>Notice that the numerator $\prod_{m\ne j}(x-x_m)$ has $k$ roots,</p>
+<p>$$
+\{x_m\}_{m\ne j}
+$$</p>
+<p>, while the denominator $\prod_{m\ne j}(x_j-x_m)$ scales te resulting polynomial so that $\ell_j(x_j)=1$.</p>
+<p>The Lagrange interpolating polynomial for those points is the linear combination:</p>
+<p>$$
+L(x) = \sum_{j=0}^{k}y_i \ell_j(x)
+$$</p>
+<p>Each basis polynomial has degree $k$, so the sum $L(x)$ has degree $\le k$, and it interpolates the data because</p>
+<p>$$
+L(x_m) = \sum_{j=0}^{k}y_i \ell_j(x_m) = y_m
+$$</p>
+<h2 id="1-question-multiplying-two-polynomials">1. Question: Multiplying Two Polynomials</h2>
+<p>In cryptography, we work in polynomial ring, i.e., $\mathbb{Z}_q[x]/(x^n+1)$ where $q$ is a prime number.</p>
+<p>Polynomials are the form $a_0+a_1 x+ &hellip; + a_{n-1}x^{n-1}$, whose degree is at most $n-1$, where the $a_i \in \mathbb{Z}_q$ are integers modulo $q$.</p>
+<p>Consider two polynomials, denoted as $f(x)$ and $g(x)$, both represented using monomials and having a degree of $n-1$, we now compute the production of them.
+$$
+f(x) = \sum_{i=0}^{n-1}a_i x^i \\
+g(x) = \sum_{i=0}^{n-1}b_i x^i
+$$</p>
+<p>We denote the production of them as $f\cdot g = \sum_{i=0}^{n-1}c_i x^i$, where $c_i=(\sum_{j+k=i}a_jb_k - \sum_{j+k=n+i}a_jb_k) mod \ q$.
+Though we can compute $f\cdot g$ using simple $O(n^2)$ method, we can lower the cost to $O(n\ log n)$. The basic idea behind this algorithm is &ldquo;divide and conquer&rdquo;.</p>
+<p>Before devling into it, we first review lagrange polynomial representation. Evaluating polynomials $f$ and $g$ at $(x_1, &hellip;, x_n)$. For $f$, we got $\{(x_1, f(x_1)), &hellip;, (x_n, f(x_n))\}$, for $g$, we got $\{(x_1, g(x_1)), &hellip;, (x_n, g(x_n))\}$. Then we can easily get the lagrange polynomial representation of $f\cdot g$, $\{(x_1, f(x_1)g(x_1)), &hellip;, (x_n, f(x_n)g(x_n))\}$. In another word, computing the production of two polynomials using lagrange representation only need $O(n)$ operations. Now, the problem turned converting a monomial polynomial representation and a lagrange representation with each other. One can easily give a $O(n^2)$ method to do this, number theoretic transform can do this with $O(n\ log n)$ operations.</p>
+<h2 id="2-number-theoretic-transform">2. Number Theoretic Transform</h2>
+<p>Let $\omega \in \mathbb{Z}_q$ be a primitive $n$-th root of unity if $\omega^n=1$ and $\omega^i \ne 1$ for any $i$ such that $0 &lt; i &lt; n$. The primitive $n$-th roots of unity exist if and only if $n$ divides $q-1$.</p>
+<p>Assume a fixed $\omega$ that is a primitive root of unity, given a tuple $a=(a_0, &hellip;, a_{n-1})$ in $\mathbb{Z}_q^n$ and</p>
+<p>$$
+f=\sum_{i=0}^{n-1}a_ix^i
+$$</p>
+<p>$NTT(a)$ is the tuple $a^\prime=(a_0^\prime, &hellip;, a_{n-1}^\prime)$ defined by</p>
+<p>$$
+a_i^\prime = \sum_{j=0}^{n-1}a_j\omega^{ij} \ mod \ q = f(\omega^i)
+$$</p>
+<p>According to the parity of the coefficients&rsquo; indices, we divide the polynomial $f$ into two parts. $f_e$ represents the polynomial with even-index coefficients, and $f_o$ represents the polynomial with odd-index coefficients.
+$$
+f_{e} = a_0 + a_2x^2+&hellip;+a_{n-2}x^{n-2} \\
+f_{o} = a_1 + a_3x^2+&hellip;+a_{n-1}x^{n-2} \\
+f = f_{e} + xf_{o}
+$$</p>
+<p>Let $x \leftarrow x^2$, we can rewrite the above equation to
+$$
+f_{e}(x) = a_0 + a_2x+&hellip;+a_{n-2}x^{\frac{n}{2}-1} \\
+f_{o}(x) = a_1 + a_3x+&hellip;+a_{n-1}x^{\frac{n}{2}-1} \\
+f(x) = f_{e}(x^2) + xf_{o}(x^2)
+$$</p>
+<p>We need to compute $f(\omega^j)$ for $j \in \{0, 1, &hellip;, \frac{n}{2}-1, \frac{n}{2}, &hellip;, n-1\}$.</p>
+<p>Here we have a interesting fact which halves the computing.
+$$
+\omega^0 = \omega^{2\frac{n}{2}} \ , j=0 \\
+\omega^2 = \omega^{2(\frac{n}{2}+1)} \ , j=1 \\
+&hellip; \\
+\omega^{n-2} = \omega^{2(n-1)} \ , j=\frac{n}{2}-1
+$$</p>
+<p>Let $x \leftarrow \omega^j$, we have the following equation</p>
+<p>$$
+f_{e}(\omega^j) = a_0 + a_2 \omega^{2j}+&hellip;+ a_{n-2} \omega^{(\frac{n}{2}-1)j} \\
+f_{o}(\omega^j) = a_1 + a_3 \omega^{2j}+&hellip;+ a_{n-1} \omega^{(\frac{n}{2}-1)j} \\
+f(\omega^j) = f_{e}(\omega^{2j}) + \omega^j f_{o}(\omega^{2j})
+$$</p>
+<p>Suppose we already computed $f_{e}(\omega^{2j}), f_{o}(\omega^{2j}), f(\omega^j)$ for $j \in \{0, 1, &hellip;, \frac{n}{2}-1\}$. Then we can directly compute
+$$
+f_{e}(\omega^{j+\frac{n}{2}}) = f_{e}(\omega^{2j}) + \omega^{j+\frac{n}{2}} f_{o}(\omega^{2j})
+$$</p>
+<p>Since $\omega^{j+\frac{n}{2}} = \omega^j +\omega^{\frac{n}{2}} = -\omega^j$, then simplify the above equation
+$$
+f_{e}(\omega^{j+\frac{n}{2}}) = f_{e}(\omega^{2j}) - \omega^{j} f_{o}(\omega^{2j})
+$$</p>
+<p>For the inverse number theoretic transform, just set $\omega \leftarrow inv(\omega)$.</p>
+
+		</section>
+
+		<div class="post-tags">
+			
+			
+			<nav class="nav tags">
+				<ul class="tags">
+					
+					<li><a href="/tags/cryptography">Cryptography</a></li>
+					
+				</ul>
+			</nav>
+			
+			
+		</div>
+	</article>
+</main>
+<footer>
+  <div style="display:flex"><a class="soc" href="https://github.com/wangtsiao" rel="me" title="GitHub"><i data-feather="github"></i></a>
+    <a class="border"></a><a class="soc" href="https://twitter.com/qiaowang1999" rel="me" title="Twitter"><i data-feather="twitter"></i></a>
+    <a class="border"></a></div>
+  <div class="footer-info">
+    2023  
+    
+  </div>
+</footer>
+
+
+<script>
+  feather.replace()
+</script></div>
+    </body>
+</html>

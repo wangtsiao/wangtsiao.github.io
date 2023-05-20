@@ -229,7 +229,7 @@ $$</li>
 <li>$\pi \leftarrow Prove(R, \sigma, a_1, &hellip;, a_m)$: Pick $r,s\leftarrow \mathbb{F}$ and compute a $3\times (m+2n+4)$ matrix $\Pi$ such that $\pi=\Pi\sigma=(A, B, C)$ where
 $$
 A = \alpha+\sum_{i=0}^m a_i u_i(x) + r\delta \\
-A = \beta+\sum_{i=0}^m a_i v_i(x) + s\delta \\
+B = \beta+\sum_{i=0}^m a_i v_i(x) + s\delta \\
 C = \frac{\sum_{i=\ell+1}^m a_i(\beta u_i(x)+\alpha v_i(x)+w_i(x)) + h(x)t(x)}{\delta} + As+rB-rs\delta
 $$</li>
 <li>$0/1 \leftarrow Verify(R, \sigma, a_1, &hellip;, a_\ell)$: Compute a quadratic multi-variate polynomial $t$ such that $t(\sigma, \pi)$=0 corresponds to the test
@@ -258,37 +258,44 @@ $$</p>
 $$</p>
 <p>Groth16 constructs the pairing-based argument by using the LIP from the previous section &ldquo;in the exponents&rdquo;. The NIZK argument is as follows.</p>
 <ul>
-<li>$(\sigma, \tau) \leftarrow Setup(R)$: Pick arbitrary generators $G$ and $H$ for $\mathbb{G}_1$ and $\mathbb{G}_2$. Pick $\alpha, \beta, \gamma, \delta, x \leftarrow \mathbb{Z}_p^*$. Define $\tau=(\alpha, \beta, \gamma, \delta, x)$ and compute</li>
+<li>$(\sigma, \tau) \leftarrow Setup(R)$: Pick arbitrary generators $G$ and $H$ for $\mathbb{G}_1$ and $\mathbb{G}_2$, where $\mathbb{G}_1$ and $\mathbb{G}_2$ are two elliptic curve groups. Pick $\alpha, \beta, \gamma, \delta, x \leftarrow \mathbb{Z}_p^*$. From now on, for sake of simplicity, we denoted $[v]_1$ as $v G$, and $[v]_2$ as $v H$, where $v$ is any number in the prime finite field. Define $\tau=(\alpha, \beta, \gamma, \delta, x)$ and compute</li>
 </ul>
 <p>$$
-G^\alpha, G^\beta, H^\beta, H^\gamma, G^\delta, H^\delta
+[\alpha]_1, [\beta]_1, [\beta]_2, [\gamma]_2, [\delta]_1, [\delta]_2
 $$</p>
-<p>$$\{G^{x^i}\}_{i=0}^{n-1}$$</p>
-<p>$$\{H^{x^i}\}_{i=0}^{n-1}$$</p>
-<p>$$\{G^\frac{\beta u_i(x)+\alpha v_i(x)+w_i(x)}{\gamma}\}_{i=0}^{\ell}$$</p>
-<p>$$\{G^\frac{\beta u_i(x)+\alpha v_i(x)+w_i(x)}{\delta}\}_{i=\ell+1}^{m}$$</p>
-<p>$$\{G^\frac{x^it(x)}{\delta}\}_{i=0}^{n-2}$$</p>
+<p>$$
+[x^i]_1 \ [x^i]_2 \ for \ i=\{0&hellip;n-1\}
+$$</p>
+<p>$$
+[\frac{\beta u_i(x)+\alpha v_i(x)+w_i(x)}{\gamma}]_1 \ for \ i=\{0,&hellip;,\ell\}
+$$</p>
+<p>$$
+[\frac{\beta u_i(x)+\alpha v_i(x)+w_i(x)}{\delta}]_1 \ for \ i=\{\ell+1,&hellip;,m\}
+$$</p>
+<p>$$
+[\frac{x^it(x)}{\delta}]_1 \ for \ i=\{0,&hellip;,n-2\}
+$$</p>
 <p>Use $\sigma$ indicates all the above.</p>
 <ul>
 <li>$Prove(R, \sigma, a_1, &hellip;, a_m)$: Pick $r, s \leftarrow \mathbb{Z}_p$ and compute $\pi = (A, B, C)$, where</li>
 </ul>
 <p>$$
-A = G^{\alpha+\sum_{i=0}^m a_i u_i(x) + r\delta}
+[A]_1, \ [B]_2, \ [C]_1
 $$</p>
+<p>where</p>
 <p>$$
-B = H^{\beta+\sum_{i=0}^m a_i v_i(x) + s\delta}
-$$</p>
-<p>$$
-C = G^{\frac{\sum_{i=\ell+1}^m a_i(\beta u_i(x)+\alpha v_i(x)+w_i(x)) + h(x)t(x)}{\delta} + s(\alpha+\sum_{i=0}^m a_i u_i(x))+r(\beta+\sum_{i=0}^m a_i v_i(x))+rs\delta}
+A = \alpha+\sum_{i=0}^m a_i u_i(x) + r\delta \\
+B = \beta+\sum_{i=0}^m a_i v_i(x) + s\delta \\
+C = \frac{\sum_{i=\ell+1}^m a_i(\beta u_i(x)+\alpha v_i(x)+w_i(x)) + h(x)t(x)}{\delta} + As+rB-rs\delta
 $$</p>
 <ul>
-<li>$Verify(R, \sigma, a_1, &hellip;, a_\ell, \pi)$: Parse $\pi=(A, B, C)\in \mathbb{G}_1\times\mathbb{G}_2\times\mathbb{G}_1$. Accept the proof if and only if
+<li>$Verify(R, \sigma, a_1, &hellip;, a_\ell, \pi)$: Parse $\pi=([A]_1, [B]_2, [C]_1)\in \mathbb{G}_1\times\mathbb{G}_2\times\mathbb{G}_1$. Accept the proof if and only if
 $$
-e(A, B) = e(G^\alpha, H^\beta)\textbf{T}e(C, H^\delta)
+e([A]_1, [B]_2) = e([\alpha]_1, [\beta]_2) + \textbf{T} + ([C]_1, [\delta]_2)
 $$</li>
 </ul>
 <p>$$
-\textbf{T} = e(G^{\frac{\sum_{i=0}^\ell a_i(\beta u_i(x)+\alpha v_i(x)+w_i(x))}{\gamma}},  H^\gamma)
+\textbf{T} = e([{\frac{\sum_{i=0}^\ell a_i(\beta u_i(x)+\alpha v_i(x)+w_i(x))}{\gamma}}]_1,  [\gamma]_2)
 $$</p>
 <h2 id="reference">Reference</h2>
 <div id="refer-GGPR13"></div>
